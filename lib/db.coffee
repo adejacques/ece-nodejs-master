@@ -1,5 +1,4 @@
-
-level = require 'level'
+level = require 'levelup'
 
 module.exports = (db="#{__dirname}../db") ->
   db = level db if typeof db is 'string'
