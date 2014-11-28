@@ -49,6 +49,12 @@ app.get '/', (req, res, next) ->
 app.post '/login', (req, res, next) ->
   console.log "user :" + req.body.username
   console.log "password :" + req.body.password
+  #TODO TEST Return True or false
+  res.json
+    success: true
+    username: req.body.username
+    password: req.body.password
+
 
 app.post '/user/login', (req, res, next) ->
   res.json

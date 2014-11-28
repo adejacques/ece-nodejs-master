@@ -13,6 +13,7 @@ html
     script
       :coffee
         $().ready ->
+          $('#successLogin').hide()
           console.log 'ready'
           $('#login').submit (e) ->
             # TODO: validation
@@ -35,25 +36,35 @@ html
             #return false
             $.post "/login", user, (data) ->
               console.log 'data', data
+              if data.success is true
+                $('#signin').hide()
+                $('#loginText').text "Username: "+data.username+" - Password: "+data.password
+                $('#successLogin').show()
+              else
+                $('#signin').show()
+                #$('#successLogin').hide()
             , 'json'
   body
 
-    form#login(action="/login", method="post", role="form")
-      table
-        tr.form-group
-          th
-            label(for="login-username") Username
-          td
-            input#login-username.form-control(type='text', name="username")
-        tr.form-group
-          th
-            label(for="login-password") Password
-          td
-            input#login-password.form-control(type='password', name="password")
-        tr.form-group
-          th
-          td
-            //- button.btn.btn-primary(type='button') Login
-            //- button.btn.btn-default(type='button') Signin
-            input.btn.btn-primary(type='submit', value="Login")
-            input.btn.btn-default(type='submit', value="Signin")
+    div#signin
+      form#login(action="/login", method="post", role="form")
+        table
+          tr.form-group
+            th
+              label(for="login-username") Username
+            td
+              input#login-username.form-control(type='text', name="username")
+          tr.form-group
+            th
+              label(for="login-password") Password
+            td
+              input#login-password.form-control(type='password', name="password")
+          tr.form-group
+            th
+            td
+              //- button.btn.btn-primary(type='button') Login
+              //- button.btn.btn-default(type='button') Signin
+              input.btn.btn-primary(type='submit', value="Login")
+              input.btn.btn-default(type='submit', value="Signin")
+    div#successLogin
+      p#loginText
