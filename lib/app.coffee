@@ -46,6 +46,10 @@ app.use serve_static "#{__dirname}/../public"
 app.get '/', (req, res, next) ->
   res.render 'index', title: 'Express'
 
+app.post '/login', (req, res, next) ->
+  console.log "user :" + req.body.username
+  console.log "password :" + req.body.password
+
 app.post '/user/login', (req, res, next) ->
   res.json
     username: 'wdavidw'

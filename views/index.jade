@@ -21,19 +21,21 @@ html
               username: $('#login-username').val()
               password: $('#login-password').val()
             console.log 'user', user
-            if user.username == '' || user.password == ''
-              alert 'Les champs username et password doivent êtres remplis'
-            else
-              $.ajax
-                url: $this.attr 'action'
-                type: $this.attr 'method'
-                data: $this.serialize()
-                dataType: 'json'
-                success: alert 'success'
+            # if user.username == '' || user.password == ''
+            #   alert 'Les champs username et password doivent êtres remplis'
+            # else
+            #   $.ajax
+            #     url: $this.attr 'action'
+            #     type: $this.attr 'method'
+            #     data: $this.serialize()
+            #     dataType: 'json'
+            #     success :
+            #       console.log "Successful AJAX call: #{user.username}"
             e.preventDefault()
-            #$.post "/user/login", user, (data) ->
-            #  console.log 'data', data
-            #, 'json'
+            #return false
+            $.post "/login", user, (data) ->
+              console.log 'data', data
+            , 'json'
   body
 
     form#login(action="/login", method="post", role="form")
