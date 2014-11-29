@@ -16,7 +16,6 @@ module.exports = (db="#{__dirname}../db") ->
         user[key] = data.value
         # console.log "password : #{data.value}"
         # console.log "username : #{username}"
-        # console.log '----------------------'
         if user.username is username
           callback user
       .on 'error', (err) ->

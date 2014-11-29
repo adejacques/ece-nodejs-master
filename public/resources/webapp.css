@@ -1,11 +1,14 @@
-#login {
+#login,
+#signup {
   position: relative;
   width: 300px;
   margin: 100px auto;
 }
-#login td {
+#login td,
+#signup td {
   padding: 10px;
 }
-#login button {
+#login button,
+#signup button {
   margin-right: 10px;
 }

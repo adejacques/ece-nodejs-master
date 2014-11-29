@@ -51,16 +51,19 @@ app.get '/', (req, res, next) ->
   res.render 'index', title: 'Express'
 
 app.post '/login', (req, res, next) ->
-  #TODO TEST Return True or false
   #client = db "/tmp/webapp1"
   client.users.get req.body.username
   , (user) ->
-      console.log "username:" + user.username
-      console.log "new:" + user.username
+      console.log "user:"+ user
+      #tmp = user.username is req.body.username or user.mail is req.body.username
+      #console.log "tmp:"+tmp
       if user.username is req.body.username and user.password is req.body.password
         console.log 'Connected !'
         res.json
           success: true
+          #username: user.username
+          #mail: user.mail
+          #password: user.password
           username: req.body.username
           password: req.body.password
       else
@@ -69,29 +72,6 @@ app.post '/login', (req, res, next) ->
           success:false
   , (err) ->
     console.log 'erreur get'
-
-  ###
-  client.users.set req.body.username,
-    password: req.body.password
-  , (err) ->
-    console.log 'erreur set'
-    client.users.get req.body.username
-    , (user) ->
-        console.log user
-        if user.username is req.body.username and user.password is req.body.password
-          console.log 'login réussi'
-          res.json
-            success: true
-            username: req.body.username
-            password: req.body.password
-        else
-          console.log 'Error login'
-          res.json
-            success:false
-    , (err) ->
-      console.log 'erreur get'
-  #client.close()
-  ###
 
 app.post '/user/login', (req, res, next) ->
   res.json
@@ -106,24 +86,20 @@ app.get '/signup', (req, res, next) ->
 app.post '/signup', (req, res, next) ->
   client.users.get req.body.username
   , (user) ->
-      console.log "username:" + user.username
-      console.log "new:" + user.username
+      #or user.mail is req.body.mail
       if user.username is req.body.username
         console.log 'Already register'
         res.json
           success: false
-          username: req.body.username
-          password: req.body.password
       else
         console.log 'Need register'
+
         client.users.set req.body.username,
           password: req.body.password
         , (err) ->
           console.log 'erreur set'
         res.json
           success: true
-          username: req.body.username
-          password: req.body.password
   , (err) ->
     console.log 'erreur get'
 
