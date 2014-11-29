@@ -26,16 +26,18 @@ html
             $.post "/login", user, (data) ->
               console.log 'data', data
               if data.success is true
-                $('#signin').hide()
+                $('#login').hide()
                 $('#loginText').text "Username: "+data.username+" - Password: "+data.password
                 $('#successLogin').show()
               else
-                $('#signin').show()
+                alert 'Echec grosse merde'
+                location.reload()
+                #$('#signin').show()
                 #$('#successLogin').hide()
             , 'json'
   body
 
-    div#signin
+    div#login
       form#login(action="/login", method="post", role="form")
         table
           tr.form-group

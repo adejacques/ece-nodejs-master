@@ -48,29 +48,43 @@ app.use serve_static "#{__dirname}/../public"
 app.get '/', (req, res, next) ->
   res.render 'index', title: 'Express'
 
+global.client = db "/tmp/webapp1"
+
 app.post '/login', (req, res, next) ->
   #TODO TEST Return True or false
-  client = db "/tmp/webapp1"
-  client.users.set req.body.username,
-    password: req.body.password
-  , (err) ->
-    console.log 'erreur set'
-    client.users.get req.body.username
-    , (user) ->
-        console.log user
-        if user.username is req.body.username and user.password is req.body.password
-          console.log 'login réussi'
-          res.json
-            success: true
-            username: req.body.username
-            password: req.body.password
-        else
-          console.log 'login raté'
-          res.json
-            success:false
-    , (err) ->
-      console.log 'erreur get'
-  client.close
+  client.users.get req.body.username
+  , (user) ->
+      console.log user
+      if user.username is req.body.username and user.password is req.body.password
+         console.log 'login réussi'
+         res.json
+          success: true
+          username: req.body.username
+          password: req.body.password
+      else
+         res.json
+          success:false
+
+  # client.users.set req.body.username,
+  #   password: req.body.password
+  # , (err) ->
+  #   console.log 'erreur set'
+  #   client.users.get req.body.username
+  #   , (user) ->
+  #       console.log user
+  #       if user.username is req.body.username and user.password is req.body.password
+  #         console.log 'login réussi'
+  #         res.json
+  #           success: true
+  #           username: req.body.username
+  #           password: req.body.password
+  #       else
+  #         console.log 'login raté'
+  #         res.json
+  #           success:false
+  #   , (err) ->
+  #     console.log 'erreur get'
+
 
 app.post '/user/login', (req, res, next) ->
   res.json
