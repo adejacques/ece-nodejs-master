@@ -13,17 +13,24 @@ module.exports = (db="#{__dirname}../db") ->
         [_, username, key] = data.key.split ':'
         user.username ?= username
         user[key] = data.value
+        console.log "password : #{data.value}"
+        console.log "username : #{username}"
+        console.log '----------------------'
+        callback user if user.username is username
       .on 'error', (err) ->
-        callback err
+        callback err if callback and typeof (callback) is "function"
       .on 'end', ->
-        callback null, user
+        callback 'end!'
     set: (username, user, callback) ->
       ops = for k, v of user
         continue if k is 'username'
         type: 'put'
         key: "users:#{username}:#{k}"
         value: v
+      console.log "valeur de k : #{k}"
+      console.log "valeur key dans le set : #{username}"
+      console.log "valeur password dans le set : #{v}"
       db.batch ops, (err) ->
-        callback err
+        callback err if callback and typeof (callback) is "function"
     del: (username, callback) ->
       # TODO

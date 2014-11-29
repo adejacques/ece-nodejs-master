@@ -15,6 +15,8 @@ serve_index = require 'serve-index'
 serve_static = require 'serve-static'
 jquery = require 'jquery'
 db = require("./db.coffee")
+rimraf = require 'rimraf'
+should = require 'should'
 
 # config = require '../conf/hdfs'
 
@@ -47,14 +49,28 @@ app.get '/', (req, res, next) ->
   res.render 'index', title: 'Express'
 
 app.post '/login', (req, res, next) ->
-  console.log "user :" + req.body.username
-  console.log "password :" + req.body.password
   #TODO TEST Return True or false
-  res.json
-    success: true
-    username: req.body.username
+  client = db "/tmp/webapp1"
+  client.users.set req.body.username,
     password: req.body.password
-
+  , (err) ->
+    console.log 'erreur set'
+    client.users.get req.body.username
+    , (user) ->
+        console.log user
+        if user.username is req.body.username and user.password is req.body.password
+          console.log 'login réussi'
+          res.json
+            success: true
+            username: req.body.username
+            password: req.body.password
+        else
+          console.log 'login raté'
+          res.json
+            success:false
+    , (err) ->
+      console.log 'erreur get'
+  client.close
 
 app.post '/user/login', (req, res, next) ->
   res.json

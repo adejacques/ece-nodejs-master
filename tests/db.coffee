@@ -42,4 +42,3 @@ describe 'users', ->
           user.lastname.should.eql 'Worms'
           should.not.exists user.email
           next()
-

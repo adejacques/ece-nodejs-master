@@ -1,15 +1,12 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node',
-1 verbose cli   '/usr/local/bin/npm',
-1 verbose cli   'install',
-1 verbose cli   'connect-coffee-scrip' ]
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'rimrar' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.33
 4 warn package.json webapp@0.0.0 No repository field.
 5 warn package.json webapp@0.0.0 No README data
 6 verbose readDependencies using package.json deps
-7 verbose cache add [ 'connect-coffee-scrip', null ]
-8 verbose cache add name=undefined spec="connect-coffee-scrip" args=["connect-coffee-scrip",null]
+7 verbose cache add [ 'rimrar', null ]
+8 verbose cache add name=undefined spec="rimrar" args=["rimrar",null]
 9 verbose parsed url { protocol: null,
 9 verbose parsed url   slashes: null,
 9 verbose parsed url   auth: null,
@@ -19,29 +16,29 @@
 9 verbose parsed url   hash: null,
 9 verbose parsed url   search: null,
 9 verbose parsed url   query: null,
-9 verbose parsed url   pathname: 'connect-coffee-scrip',
-9 verbose parsed url   path: 'connect-coffee-scrip',
-9 verbose parsed url   href: 'connect-coffee-scrip' }
-10 silly lockFile dcc090d7-connect-coffee-scrip connect-coffee-scrip
-11 verbose lock connect-coffee-scrip /Users/alexandredejacques/.npm/dcc090d7-connect-coffee-scrip.lock
-12 silly lockFile dcc090d7-connect-coffee-scrip connect-coffee-scrip
-13 silly lockFile dcc090d7-connect-coffee-scrip connect-coffee-scrip
-14 verbose addNamed [ 'connect-coffee-scrip', '' ]
+9 verbose parsed url   pathname: 'rimrar',
+9 verbose parsed url   path: 'rimrar',
+9 verbose parsed url   href: 'rimrar' }
+10 silly lockFile 16171e27-rimrar rimrar
+11 verbose lock rimrar /Users/alexandredejacques/.npm/16171e27-rimrar.lock
+12 silly lockFile 16171e27-rimrar rimrar
+13 silly lockFile 16171e27-rimrar rimrar
+14 verbose addNamed [ 'rimrar', '' ]
 15 verbose addNamed [ null, '*' ]
-16 silly lockFile ce6015e9-connect-coffee-scrip connect-coffee-scrip@
-17 verbose lock connect-coffee-scrip@ /Users/alexandredejacques/.npm/ce6015e9-connect-coffee-scrip.lock
-18 silly addNameRange { name: 'connect-coffee-scrip', range: '*', hasData: false }
-19 verbose request where is /connect-coffee-scrip
+16 silly lockFile 92102a92-rimrar rimrar@
+17 verbose lock rimrar@ /Users/alexandredejacques/.npm/92102a92-rimrar.lock
+18 silly addNameRange { name: 'rimrar', range: '*', hasData: false }
+19 verbose request where is /rimrar
 20 verbose request registry https://registry.npmjs.org/
-21 verbose request id 38d92f38aad65b0d
-22 verbose url raw /connect-coffee-scrip
-23 verbose url resolving [ 'https://registry.npmjs.org/', './connect-coffee-scrip' ]
-24 verbose url resolved https://registry.npmjs.org/connect-coffee-scrip
-25 verbose request where is https://registry.npmjs.org/connect-coffee-scrip
-26 info trying registry request attempt 1 at 18:05:02
-27 http GET https://registry.npmjs.org/connect-coffee-scrip
-28 http 404 https://registry.npmjs.org/connect-coffee-scrip
-29 verbose headers { date: 'Thu, 27 Nov 2014 17:05:03 GMT',
+21 verbose request id 6393961e41441ef7
+22 verbose url raw /rimrar
+23 verbose url resolving [ 'https://registry.npmjs.org/', './rimrar' ]
+24 verbose url resolved https://registry.npmjs.org/rimrar
+25 verbose request where is https://registry.npmjs.org/rimrar
+26 info trying registry request attempt 1 at 15:55:51
+27 http GET https://registry.npmjs.org/rimrar
+28 http 404 https://registry.npmjs.org/rimrar
+29 verbose headers { date: 'Fri, 28 Nov 2014 14:55:52 GMT',
 29 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
 29 verbose headers   'content-type': 'application/json',
 29 verbose headers   'cache-control': 'max-age=0',
@@ -49,14 +46,14 @@
 29 verbose headers   'accept-ranges': 'bytes',
 29 verbose headers   via: '1.1 varnish',
 29 verbose headers   age: '0',
-29 verbose headers   'x-served-by': 'cache-lcy1124-LCY',
+29 verbose headers   'x-served-by': 'cache-lcy1126-LCY',
 29 verbose headers   'x-cache': 'MISS',
 29 verbose headers   'x-cache-hits': '0',
-29 verbose headers   'x-timer': 'S1417107902.478578,VS0,VE622',
+29 verbose headers   'x-timer': 'S1417186551.953397,VS0,VE103',
 29 verbose headers   'keep-alive': 'timeout=10, max=50',
 29 verbose headers   connection: 'Keep-Alive' }
 30 silly registry.get cb [ 404,
-30 silly registry.get   { date: 'Thu, 27 Nov 2014 17:05:03 GMT',
+30 silly registry.get   { date: 'Fri, 28 Nov 2014 14:55:52 GMT',
 30 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
 30 silly registry.get     'content-type': 'application/json',
 30 silly registry.get     'cache-control': 'max-age=0',
@@ -64,25 +61,25 @@
 30 silly registry.get     'accept-ranges': 'bytes',
 30 silly registry.get     via: '1.1 varnish',
 30 silly registry.get     age: '0',
-30 silly registry.get     'x-served-by': 'cache-lcy1124-LCY',
+30 silly registry.get     'x-served-by': 'cache-lcy1126-LCY',
 30 silly registry.get     'x-cache': 'MISS',
 30 silly registry.get     'x-cache-hits': '0',
-30 silly registry.get     'x-timer': 'S1417107902.478578,VS0,VE622',
+30 silly registry.get     'x-timer': 'S1417186551.953397,VS0,VE103',
 30 silly registry.get     'keep-alive': 'timeout=10, max=50',
 30 silly registry.get     connection: 'Keep-Alive' } ]
-31 silly lockFile ce6015e9-connect-coffee-scrip connect-coffee-scrip@
-32 silly lockFile ce6015e9-connect-coffee-scrip connect-coffee-scrip@
-33 error 404 404 Not Found: connect-coffee-scrip
+31 silly lockFile 92102a92-rimrar rimrar@
+32 silly lockFile 92102a92-rimrar rimrar@
+33 error 404 404 Not Found: rimrar
 33 error 404
-33 error 404 'connect-coffee-scrip' is not in the npm registry.
+33 error 404 'rimrar' is not in the npm registry.
 33 error 404 You should bug the author to publish it
 33 error 404 It was specified as a dependency of 'webapp'
 33 error 404
 33 error 404 Note that you can also install from a
 33 error 404 tarball, folder, or http url, or git url.
 34 error System Darwin 14.0.0
-35 error command "node" "/usr/local/bin/npm" "install" "connect-coffee-scrip"
-36 error cwd /Users/alexandredejacques/Downloads/ece-nodejs-master
+35 error command "node" "/usr/local/bin/npm" "install" "rimrar"
+36 error cwd /Users/alexandredejacques/Documents/ING 5/Asynchronous Server Technology/ece-nodejs-master/ece-nodejs-master
 37 error node -v v0.10.33
 38 error npm -v 1.4.28
 39 error code E404
