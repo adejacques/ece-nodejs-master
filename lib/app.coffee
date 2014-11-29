@@ -20,7 +20,7 @@ should = require 'should'
 
 # config = require '../conf/hdfs'
 
-client = db "/tmp/webapp2"
+global.client = db "/tmp/webapp2"
 
 app = express()
 

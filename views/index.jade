@@ -28,16 +28,16 @@ html
             $.post "/login", user, (data) ->
               console.log 'data', data
               if data.success is true
-                $('#messageError').hide()
-                $('#signin').hide()
-                $('#messageSuccess').show()
-                $('#loginText').text "Username: "+data.username+" - Password: "+data.password
+                $('#login').hide()
+                $('#loginText').text "Username: "+data.username+" - Password: "+data.password+" -Button: "+data.button
                 $('#successLogin').show()
+                $('#messageError').hide()
+                $('#messageSuccess').show()
               else
-                $('#messageError').show()
-                $('#signin').show()
-                $('#messageSuccess').hide()
+                $('#login').show()
                 $('#successLogin').hide()
+                $('#messageError').show()
+                $('#messageSuccess').hide()
             , 'json'
   body
     div#messageError
@@ -49,20 +49,8 @@ html
       h1 Hello
       p Your are well logged !
       
-    div#signin
-      h1 SIGN IN
-                $('#login').hide()
-                $('#loginText').text "Username: "+data.username+" - Password: "+data.password
-                $('#successLogin').show()
-              else
-                alert 'Echec grosse merde'
-                location.reload()
-                #$('#signin').show()
-                #$('#successLogin').hide()
-            , 'json'
-  body
-
     div#login
+      h1 SIGN IN
       form#login(action="/login", method="post", role="form")
         table
           tr.form-group
@@ -80,6 +68,7 @@ html
             td
               input.btn.btn-primary(type='submit', value="Login")
               input.btn.btn-default(type='submit', value="Signin")
+      
       h2 SIGN UP
       p Don't have LevelDB Accoutn ?
       a(href="/signup") Sign up now
