@@ -51,6 +51,18 @@ html
       
     div#signin
       h1 SIGN IN
+                $('#login').hide()
+                $('#loginText').text "Username: "+data.username+" - Password: "+data.password
+                $('#successLogin').show()
+              else
+                alert 'Echec grosse merde'
+                location.reload()
+                #$('#signin').show()
+                #$('#successLogin').hide()
+            , 'json'
+  body
+
+    div#login
       form#login(action="/login", method="post", role="form")
         table
           tr.form-group
@@ -66,8 +78,6 @@ html
           tr.form-group
             th
             td
-              //- button.btn.btn-primary(type='button') Login
-              //- button.btn.btn-default(type='button') Signin
               input.btn.btn-primary(type='submit', value="Login")
               input.btn.btn-default(type='submit', value="Signin")
       h2 SIGN UP
