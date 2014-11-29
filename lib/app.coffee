@@ -20,6 +20,8 @@ should = require 'should'
 
 # config = require '../conf/hdfs'
 
+client = db "/tmp/webapp2"
+
 app = express()
 
 app.set 'views', __dirname + '/../views'
@@ -50,7 +52,25 @@ app.get '/', (req, res, next) ->
 
 app.post '/login', (req, res, next) ->
   #TODO TEST Return True or false
-  client = db "/tmp/webapp1"
+  #client = db "/tmp/webapp1"
+  client.users.get req.body.username
+  , (user) ->
+      console.log "username:" + user.username
+      console.log "new:" + user.username
+      if user.username is req.body.username and user.password is req.body.password
+        console.log 'Connected !'
+        res.json
+          success: true
+          username: req.body.username
+          password: req.body.password
+      else
+        console.log 'Not connected !'
+        res.json
+          success:false
+  , (err) ->
+    console.log 'erreur get'
+
+  ###
   client.users.set req.body.username,
     password: req.body.password
   , (err) ->
@@ -65,12 +85,13 @@ app.post '/login', (req, res, next) ->
             username: req.body.username
             password: req.body.password
         else
-          console.log 'login raté'
+          console.log 'Error login'
           res.json
             success:false
     , (err) ->
       console.log 'erreur get'
-  client.close
+  #client.close()
+  ###
 
 app.post '/user/login', (req, res, next) ->
   res.json
@@ -78,6 +99,33 @@ app.post '/user/login', (req, res, next) ->
     lastname: 'Wormss'
     Firstname: 'David'
     email: 'david@adaltas.com'
+
+app.get '/signup', (req, res, next) ->
+  res.render 'signup', title: 'Express'
+
+app.post '/signup', (req, res, next) ->
+  client.users.get req.body.username
+  , (user) ->
+      console.log "username:" + user.username
+      console.log "new:" + user.username
+      if user.username is req.body.username
+        console.log 'Already register'
+        res.json
+          success: false
+          username: req.body.username
+          password: req.body.password
+      else
+        console.log 'Need register'
+        client.users.set req.body.username,
+          password: req.body.password
+        , (err) ->
+          console.log 'erreur set'
+        res.json
+          success: true
+          username: req.body.username
+          password: req.body.password
+  , (err) ->
+    console.log 'erreur get'
 
 app.use serve_index "#{__dirname}/../public"
 if process.env.NODE_ENV is 'development'

@@ -3,6 +3,7 @@ level = require 'level'
 module.exports = (db="#{__dirname}../db") ->
   db = level db if typeof db is 'string'
   close: (callback) ->
+    console.log "close db"
     db.close callback
   users:
     get: (username, callback) ->
