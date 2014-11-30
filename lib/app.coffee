@@ -92,37 +92,6 @@ app.post '/login', (req, res, next) ->
                 res.json
                 success:false
 
-  # else if req.body.button is 'Signin'
-  #   client.users.get req.body.username
-  #   , (user) ->
-  #       #if user.username is not req.body.username
-  #         #console.log 'not in database'
-  #       client.users.set req.body.username,
-  #         password: req.body.password
-  #       , (err) ->
-  #         console.log 'erreur set'
-  #       client.users.get req.body.username
-  #       , (user) ->
-  #           console.log user
-  #           if user.username is req.body.username and user.password is req.body.password
-  #             res.json
-  #               reason: 'signin'
-  #               mode: 'signin'
-  #               success: true
-  #               username: req.body.username
-  #               password: req.body.password
-  #           else
-  #             res.json
-  #             success:false
-  #       # else
-  #       #   console.log 'already in database'
-  #       #   res.json
-  #       #     success: false
-  #       #     reason: 'already in database'
-  #     , (err) ->
-  #     console.log 'erreur get'
-
-
 app.post '/user/login', (req, res, next) ->
   res.json
     username: 'wdavidw'
