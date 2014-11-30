@@ -52,37 +52,74 @@ global.client = db "/tmp/webapp1"
 
 app.post '/login', (req, res, next) ->
   #TODO TEST Return True or false
-  client.users.get req.body.username
-  , (user) ->
-      console.log user
-      if user.username is req.body.username and user.password is req.body.password
-         console.log 'login réussi'
-         res.json
-          success: true
-          username: req.body.username
-          password: req.body.password
-      else
-         res.json
-          success:false
+  if req.body.button is 'Login'
+    client.users.get req.body.username
+    , (user) ->
+        console.log user
+        if user.username is req.body.username and user.password is req.body.password
+           res.json
+            mode: 'login'
+            success: true
+            username: req.body.username
+            password: req.body.password
+        else
+           res.json
+            success:false
+            reason: 'wrong login'
 
-  # client.users.set req.body.username,
-  #   password: req.body.password
-  # , (err) ->
-  #   console.log 'erreur set'
+   else if req.body.button is 'Signin'
+     client.users.get req.body.username
+     , (user) ->
+       if user.username is req.body.username
+         res.json
+            success: false
+            reason: 'already in database'
+       else
+          client.users.set req.body.username,
+            password: req.body.password
+          , (err) ->
+            console.log 'erreur set'
+          client.users.get req.body.username
+          , (user) ->
+              console.log user
+              if user.username is req.body.username and user.password is req.body.password
+                res.json
+                  mode: 'signin'
+                  success: true
+                  username: req.body.username
+                  password: req.body.password
+              else
+                res.json
+                success:false
+
+  # else if req.body.button is 'Signin'
   #   client.users.get req.body.username
   #   , (user) ->
-  #       console.log user
-  #       if user.username is req.body.username and user.password is req.body.password
-  #         console.log 'login réussi'
-  #         res.json
-  #           success: true
-  #           username: req.body.username
-  #           password: req.body.password
-  #       else
-  #         console.log 'login raté'
-  #         res.json
-  #           success:false
-  #   , (err) ->
+  #       #if user.username is not req.body.username
+  #         #console.log 'not in database'
+  #       client.users.set req.body.username,
+  #         password: req.body.password
+  #       , (err) ->
+  #         console.log 'erreur set'
+  #       client.users.get req.body.username
+  #       , (user) ->
+  #           console.log user
+  #           if user.username is req.body.username and user.password is req.body.password
+  #             res.json
+  #               reason: 'signin'
+  #               mode: 'signin'
+  #               success: true
+  #               username: req.body.username
+  #               password: req.body.password
+  #           else
+  #             res.json
+  #             success:false
+  #       # else
+  #       #   console.log 'already in database'
+  #       #   res.json
+  #       #     success: false
+  #       #     reason: 'already in database'
+  #     , (err) ->
   #     console.log 'erreur get'
 
 

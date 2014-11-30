@@ -21,23 +21,30 @@ html
             user =
               username: $('#login-username').val()
               password: $('#login-password').val()
+              button: $('#btn').val()
             console.log 'user', user
             e.preventDefault()
             $.post "/login", user, (data) ->
               console.log 'data', data
               if data.success is true
-                $('#login').hide()
-                $('#loginText').text "Username: "+data.username+" - Password: "+data.password
+                $('#signin').hide()
+                if data.mode is 'login'
+                  $('#loginText').text "Successfully logged in : Username: "+data.username+" - Password: "+data.password
+                else
+                  $('#loginText').text "Successfully signed in : Username: "+data.username+" - Password: "+data.password
                 $('#successLogin').show()
               else
-                alert 'Echec grosse merde'
-                location.reload()
-                #$('#signin').show()
-                #$('#successLogin').hide()
+                if data.reason is 'wrong login'
+                  alert 'Mauvais user ou mot de passe'
+                  location.reload()
+                else if data.reason is 'already in database'
+                  alert 'Already in database'
+                  location.reload()
             , 'json'
+
   body
 
-    div#login
+    div#signin
       form#login(action="/login", method="post", role="form")
         table
           tr.form-group
@@ -55,7 +62,7 @@ html
             td
               //- button.btn.btn-primary(type='button') Login
               //- button.btn.btn-default(type='button') Signin
-              input.btn.btn-primary(type='submit', value="Login")
-              input.btn.btn-default(type='submit', value="Signin")
+              input.btn.btn-primary#btn(type='submit', value="Login")
+              input.btn.btn-default(type='submit', value="Signin",onclick="$('#btn').val('Signin')")
     div#successLogin
       p#loginText
