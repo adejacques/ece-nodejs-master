@@ -22,14 +22,14 @@ html
             $this = $(this)
             user =
               username: $('#login-username').val()
-              mail: $('#login-mail').val()
+              email: $('#login-email').val()
               password: $('#login-password').val()
               button: $('#btn').val()
             console.log 'user', user
             e.preventDefault()
             $.post "/login", user, (data) ->
               console.log 'data', data
-              
+
               if data.mode is 'login'
                 if data.success is true
                   # User login password and username is ok
@@ -44,14 +44,13 @@ html
                   $('#msgTitle').text "Error"
                   $('#msgText').text "Your username or password is wrong."
                   $('#messageOutput').show()
-              
+
               else if data.mode is 'signup'
                 # Display signup form
                 $('.signupForm').show()
                 $('.signinForm').hide()
                 $('#headerTitle').text "SIGN UP AND LOG"
-                
-              else 
+              else
                 # Save and log
                 if data.success is true
                   # User login password and username is ok
@@ -61,7 +60,7 @@ html
                   $('#signin').hide()
                   $('#messageOutput').show()
                   $('#successLogin').show()
-                  
+
                 else
                   $('#msgTitle').text "Error"
                   $('#msgText').text "Your username or password is already register."
@@ -70,36 +69,36 @@ html
             , 'json'
 
   body
-    
+
     div#headerDiv
       h1#headerTitle SIGN IN
-      
+
     div.jumbotron#messageOutput
       h1#msgTitle Message
       p#msgText text
-    
+
     div#signin
       form.borderPadding#login(action="/login", method="post", role="form")
         table
           tr.form-group
             th
-              label.signinForm(for="login-username") Username or mail
+              label.signinForm(for="login-username") Username or email
               label.signupForm(for="login-username") Username
             td
               input#login-username.form-control(type='text', name="username")
-          
+
           tr.form-group.signupForm
             th
-              label(for="login-mail") Mail
+              label(for="login-email") Email
             td
-              input#login-mail.form-control(type='text', name="mail", placehoder="Mail")
-          
+              input#login-email.form-control(type='text', name="email", placehoder="Mail")
+
           tr.form-group
             th
               label(for="login-password") Password
             td
               input#login-password.form-control(type='password', name="password")
-          
+
           tr.form-group
             th
             td
@@ -107,11 +106,11 @@ html
               input.btn.btn-default.signinForm(type='submit', value="Signup", onclick="$('#btn').val('Signup')")
               input.btn.btn-primary.signupForm(type='submit', value="Signup And Login", onclick="$('#btn').val('SignupAndLog')")
 
-    
+
     div#successLogin
       h2 Hello
       p#loginText
-    
+
     footer
       p © 2014 - All rights reserved.
       p Alexandre Dejacques - Lauren Letestu - Thomas Pansart

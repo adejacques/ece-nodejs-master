@@ -51,24 +51,41 @@ app.get '/', (req, res, next) ->
 global.client = db "/tmp/webapp1"
 
 app.post '/login', (req, res, next) ->
+  console.log req.body
+  #TODO TEST Return True or false
   if req.body.button is 'Login'
-    client.users.get req.body.username
-    , (user) ->
-        console.log user
-        #if (user.username is req.body.username or user.mail is req.body.mail) and user.password is req.body.password
-        if user.username is req.body.username and user.password is req.body.password
-          #TODO Check with mail or username
-          #User login password and username is ok
-          res.json
-            mode: 'login'
-            success: true
-            username: req.body.username
-            password: req.body.password
-        else
-          #User login password or username is wrong
-          res.json
-            mode: 'login'
-            success:false
+    client.emails.get req.body.username
+    , (email) ->
+        console.log email
+        console.log req.body.username
+        if email.emailname is req.body.username
+          client.users.get email.username
+          , (user) ->
+            if user.password is req.body.password
+             res.json
+               mode: 'login'
+               success: true
+               username: req.body.username
+               password: req.body.password
+            else
+             res.json
+               mode: 'login'
+               success:false
+         else
+           client.users.get req.body.username
+           , (user) ->
+              console.log user
+              if user.username is req.body.username and user.password is req.body.password
+                #TODO Check with mail or username
+                res.json
+                  mode: 'login'
+                  success: true
+                  username: req.body.username
+                  password: req.body.password
+              else
+                res.json
+                  mode: 'login'
+                  success:false
 
   else if req.body.button is 'Signup'
     #Change to signup form
@@ -77,61 +94,33 @@ app.post '/login', (req, res, next) ->
   else if req.body.button is 'SignupAndLog'
     client.users.get req.body.username
     , (user) ->
-      #if user.username is req.body.username or user.mail is req.body.mail
       if user.username is req.body.username
         #TODO Check with mail or username
-        #Already register stay in this form and display error message
         res.json
            mode: 'signupAndLog'
            success: false
       else
         #TODO Store mail
-        #Store and log username
          client.users.set req.body.username,
            password: req.body.password
-           #mail: req.body.mail
          , (err) ->
            console.log 'erreur set'
+         client.emails.set req.body.email,
+           username: req.body.username
+         , (err) ->
+           console.log 'erreur set'
+         client.emails.get req.body.email
+         , (email) ->
+            console.log email
          client.users.get req.body.username
          , (user) ->
              console.log user
-             #if (user.username is req.body.username or user.mail is req.body.mail) and user.password is req.body.password
              if user.username is req.body.username and user.password is req.body.password
                res.json
                  mode: 'signupAndLog'
                  success: true
                  username: req.body.username
                  password: req.body.password
-             #else
-               #res.json
-               #mode: 'login'
-               #success:false
-     ###
-     client.users.get req.body.username
-     , (user) ->
-       if user.username is req.body.username
-         res.json
-            mode: 'signup'
-            success: false
-            reason: 'already in database'
-       else
-          client.users.set req.body.username,
-            password: req.body.password
-          , (err) ->
-            console.log 'erreur set'
-          client.users.get req.body.username
-          , (user) ->
-              console.log user
-              if user.username is req.body.username and user.password is req.body.password
-                res.json
-                  mode: 'signup'
-                  success: true
-                  username: req.body.username
-                  password: req.body.password
-              else
-                res.json
-                success:false
-      ###
 
 app.post '/user/login', (req, res, next) ->
   res.json
