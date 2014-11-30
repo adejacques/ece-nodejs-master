@@ -6,6 +6,7 @@ http = require 'http'
 port = 1337
 sessionCookie = null
 
+
 defaultGetOptions = (path) ->
   options =
     host: "localhost"
