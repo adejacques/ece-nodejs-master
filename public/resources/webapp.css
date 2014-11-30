@@ -11,30 +11,65 @@
 }
 body {
   font: 12px Helvetica, Arial, sans-serif;
-  background: linear-gradient(to bottom, #efefef, #fff) no-repeat;
+  background-color: #fff;
 }
 h1 {
-  font-size: 16;
-  color: #777;
+  font-size: 63px;
+  color: #262626;
+}
+p {
+  margin-bottom: 15px;
+  font-size: 21px;
+  font-weight: 200;
+}
+.jumbotron h1,
+#successLogin h1,
+#successLogin h2 {
+  color: #4086fa;
 }
 #headerDiv {
   margin: 0 auto;
   margin-bottom: 20px;
   background: #fff;
-  box-shadow: 1px 0px 8px #c8c8c8;
+  box-shadow: 1px 0px 8px #000;
   padding: 10px 0 10px 0;
+  background-color: #fefefe;
 }
 #headerDiv h1 {
   margin-left: 10px;
+  font-size: 28px;
+  text-align: right;
+  margin-right: 5px;
 }
 .borderPadding {
   padding: 20px;
-  background: #eee;
+  background: #e6e6e6;
   border: 1px solid #bbb;
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
 }
-#login .buttonMarge {
-  margin-right: 3px;
+#messageOutput {
+  width: 70%;
+  margin-left: 15%;
+  padding: 20px;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+.btn {
+  margin-right: 2px;
+}
+#successLogin {
+  background-color: #e6e6e6;
+  padding: 30px;
+  border-radius: 10px;
+}
+footer {
+  margin-top: 40px;
+  text-align: center;
+}
+footer p {
+  font-size: 12px;
+  margin-bottom: 5px;
 }
