@@ -27,3 +27,14 @@ h1 {
 #headerDiv h1 {
   margin-left: 10px;
 }
+.borderPadding {
+  padding: 20px;
+  background: #eee;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+#login .buttonMarge {
+  margin-right: 3px;
+}
