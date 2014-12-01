@@ -16,7 +16,10 @@ Use REST server and level database to create web application. This site allow us
   <li>Mocha</li>
 </ul>
 
-## Authors
+## Authors (groupe 07)
 Alexandre Dejacques
 Lauren Letestu
 Thomas Pansart
+
+## Run
+node bin/start.js
