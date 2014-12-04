@@ -19,6 +19,7 @@ rimraf = require 'rimraf'
 should = require 'should'
 
 myimport = require "../lib/import"
+myexport = require "../lib/export"
 
 # config = require '../conf/hdfs'
 
@@ -54,17 +55,14 @@ isAlreadyImport = false
 # routing
 app.get '/', (req, res, next) ->
   # Import user csv to populate bdd if it is not already done (in case of reload page)
-  unless isAlreadyImport
-    imt = myimport client
-    imt.importUser()
-    isAlreadyImport = true
-
+  importFunction()
   res.render 'index', title: 'Express'
 
 app.post '/login', (req, res, next) ->
   console.log req.body
   #TODO TEST Return True or false
   if req.body.button is 'Login'
+    #Login user
     client.emails.get req.body.username
     , (email) ->
         console.log email
@@ -102,6 +100,7 @@ app.post '/login', (req, res, next) ->
     res.json
       mode: 'signup'
   else if req.body.button is 'SignupAndLog'
+    #Signup and login
     client.users.get req.body.username
     , (user) ->
       if user.username is req.body.username
@@ -129,6 +128,44 @@ app.post '/login', (req, res, next) ->
                  success: true
                  username: req.body.username
                  password: req.body.password
+
+app.post '/export', (req, res, next) ->
+  console.log 'export bdd button function app'
+  #Signup and login
+  exportFunction()
+  res.redirect('/')
+  #res.json
+  #  mode: 'export'
+  #  success: true
+
+
+# Function export import
+exportFunction = ->
+  #tmp array to test export, need to get all database
+  testArr = [
+    [
+      "blup"
+      "blup@ece.fr"
+      "blup"
+    ]
+    [
+      "blouip"
+      "blouip@ece.fr"
+      "blouip"
+    ]
+  ]
+  expt = myexport testArr
+  expt.exportUser()
+  console.log 'exported function'
+  return
+
+importFunction = ->
+  unless isAlreadyImport
+    imt = myimport client
+    imt.importUser()
+    isAlreadyImport = true
+  return
+
 
 app.post '/user/login', (req, res, next) ->
   res.json
