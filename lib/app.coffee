@@ -14,9 +14,11 @@ serve_favicon = require 'serve-favicon'
 serve_index = require 'serve-index'
 serve_static = require 'serve-static'
 jquery = require 'jquery'
-db = require("./db.coffee")
+db = require "../lib/db"
 rimraf = require 'rimraf'
 should = require 'should'
+
+myimport = require "../lib/import"
 
 # config = require '../conf/hdfs'
 
@@ -45,10 +47,19 @@ app.use stylus.middleware
     .use nib()
 app.use serve_static "#{__dirname}/../public"
 
-app.get '/', (req, res, next) ->
-  res.render 'index', title: 'Express'
+# declare variables
+global.client = db "./db/webapp1", { valueEncoding: 'json' }
+isAlreadyImport = false
 
-global.client = db "/tmp/webapp1"
+# routing
+app.get '/', (req, res, next) ->
+  # Import user csv to populate bdd if it is not already done (in case of reload page)
+  unless isAlreadyImport
+    imt = myimport client
+    imt.importUser()
+    isAlreadyImport = true
+
+  res.render 'index', title: 'Express'
 
 app.post '/login', (req, res, next) ->
   console.log req.body
@@ -76,7 +87,6 @@ app.post '/login', (req, res, next) ->
            , (user) ->
               console.log user
               if user.username is req.body.username and user.password is req.body.password
-                #TODO Check with mail or username
                 res.json
                   mode: 'login'
                   success: true
@@ -95,20 +105,18 @@ app.post '/login', (req, res, next) ->
     client.users.get req.body.username
     , (user) ->
       if user.username is req.body.username
-        #TODO Check with mail or username
         res.json
            mode: 'signupAndLog'
            success: false
       else
-        #TODO Store mail
          client.users.set req.body.username,
            password: req.body.password
          , (err) ->
-           console.log 'erreur set'
+           console.log 'erreur set' if err
          client.emails.set req.body.email,
            username: req.body.username
          , (err) ->
-           console.log 'erreur set'
+           console.log 'erreur set' if err
          client.emails.get req.body.email
          , (email) ->
             console.log email

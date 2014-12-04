@@ -3,9 +3,8 @@ server = require '../bin/start.js'
 should = require 'should'
 http = require 'http'
 
-port = 1337
+port = 1338
 sessionCookie = null
-
 
 defaultGetOptions = (path) ->
   options =
@@ -19,7 +18,7 @@ defaultGetOptions = (path) ->
 
 describe 'app', ->
   before (done) ->
-     app.listen port
+     app.listen(port)
     , (err) ->
       if err
         done err
