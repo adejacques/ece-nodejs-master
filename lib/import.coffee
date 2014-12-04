@@ -44,15 +44,15 @@ module.exports = (client) ->
          , (err) ->
            console.log 'error set user:' + err if err
          myClient.emails.set myuser[1],
-           username: user[0]
+           username: myuser[0]
          , (err) ->
             console.log 'error set mail:' + err if err
         myClient.emails.get myuser[1]
         , (email) ->
-           console.log 'check email:' + email
+           console.log email
         myClient.users.get myuser[0]
         , (user) ->
-            console.log 'check user:' + user
+            console.log user
     return
 
   # When parser are done, save in database user
