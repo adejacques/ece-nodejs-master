@@ -67,19 +67,21 @@ html
                   $('#msgText').text "Your username or password is already register."
                   $('#messageOutput').show()
             , 'json'
-          ###
-          $('#exportMessage').submit (e) ->
+          
+          $('#export').submit (e) ->
             $this = $(this)
             console.log "export submit"
             e.preventDefault()
-            $.post "/export", user, (data) ->
+            $.post "/export", (data) ->
               console.log "export: " + data
               if data.success is true
                 $('#exportMessage').text "Data register"
+                $('#exportDiv').hide()
               else 
                 $('#exportMessage').text "No Data register"
             , 'json'
-          ###
+            
+          
             
   body
 
@@ -124,11 +126,12 @@ html
       h2 Hello
       p#loginText
       p
-      h3 Export & Logout
-      //p#exportMessage
-      p Click to export database and logout
-      form#export(action="/export", method="post", role="form")
-        input.btn.btn-primary#exportBtn(type='submit', value="Export & Logout")
+      h3 Export
+      p#exportMessage
+      div#exportDiv
+        p Click to export database and logout
+        form#export(action="/export", method="post", role="form")
+          input.btn.btn-primary#exportBtn(type='submit', value="Export & Logout")
 
       
 

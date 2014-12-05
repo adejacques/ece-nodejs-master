@@ -133,29 +133,70 @@ app.post '/export', (req, res, next) ->
   console.log 'export bdd button function app'
   #Signup and login
   exportFunction()
-  res.redirect('/')
-  #res.json
-  #  mode: 'export'
-  #  success: true
+  #res.redirect('/')
+  res.json
+    mode: 'export'
+    success: true
+
+###
+app.get '/test', (req, res, next) ->
+  output = []
+  client.users.getAll (outputBdd) ->
+    console.log "get all users"
+    console.log outputBdd
+    halfSize = outputBdd.length / 2
+    i = 0
+
+    while i < halfSize
+      j = halfSize
+
+      while j < outputBdd.length
+        if outputBdd[i][0] is outputBdd[j][1]
+          output.push [
+            outputBdd[i][0]
+            outputBdd[j][0]
+            outputBdd[i][1]
+          ]
+          break
+        j++
+      i++
+
+    console.log "zizi tout dur"
+    console.log output
+    #console.log "my user:" + user.key + " - " + user.value
+###
+
+  #client.emails.getAllMails (outputMails) ->
+  #  console.log "get all emails"
+  #  console.log outputMails
+
 
 
 # Function export import
 exportFunction = ->
-  #tmp array to test export, need to get all database
-  testArr = [
-    [
-      "blup"
-      "blup@ece.fr"
-      "blup"
-    ]
-    [
-      "blouip"
-      "blouip@ece.fr"
-      "blouip"
-    ]
-  ]
-  expt = myexport testArr
-  expt.exportUser()
+  output = []
+
+  client.users.getAll (outputBdd) ->
+    halfSize = outputBdd.length / 2
+    i = 0
+
+    while i < halfSize
+      j = halfSize
+
+      while j < outputBdd.length
+        if outputBdd[i][0] is outputBdd[j][1]
+          output.push [
+            outputBdd[i][0]
+            outputBdd[j][0]
+            outputBdd[i][1]
+          ]
+          break
+        j++
+      i++
+
+    expt = myexport output
+    expt.exportUser()
+
   console.log 'exported function'
   return
 

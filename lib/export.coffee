@@ -4,14 +4,14 @@ csv = require "csv"
 stringifier = stringify(delimiter: ";")
 data = ""
 # Flag 'a' append at the end
-wstream = fs.createWriteStream(__dirname + "/../public/resources/users.csv",
-  flags: "a"
-)
+#wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
+#  flags: "a"
+#)
 
 # Flag 'w' remove all and write
-#wstream = fs.createWriteStream(__dirname + "/../public/resources/users.csv",
-#  flags: "w"
-#)
+wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
+  flags: "w"
+)
 
 
 module.exports = (arrayToSave) ->

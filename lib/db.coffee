@@ -19,6 +19,21 @@ module.exports = (db="#{__dirname}../db") ->
         callback err if callback and typeof (callback) is "function"
       .on 'end', ->
         callback 'end!'
+    getAll: (callback) ->
+      pers = {}
+      output = []
+      db.createReadStream
+       gt: ""
+      .on 'data', (data) ->
+        [_,data_key,_] = data.key.split ':'
+        pers.key = data_key
+        pers.value = data.value
+        test = [data_key, data.value]
+        output.push test
+      .on 'end', ->
+        callback output
+      .on 'error', (err) ->
+        callback err if callback and typeof (callback) is "function"
     set: (username, user, callback) ->
       ops = for k, v of user
         continue if k is 'username'
