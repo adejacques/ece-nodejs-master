@@ -18,7 +18,7 @@ html
           $('.signupForm').hide()
           $('#messageOutput').hide()
           console.log 'ready'
-          
+
           $('#login').submit (e) ->
             $this = $(this)
             user =
@@ -67,7 +67,11 @@ html
                   $('#msgText').text "Your username or password is already register."
                   $('#messageOutput').show()
             , 'json'
+<<<<<<< HEAD
           
+=======
+
+>>>>>>> FETCH_HEAD
           $('#export').submit (e) ->
             $this = $(this)
             console.log "export submit"
@@ -76,6 +80,7 @@ html
               console.log "export: " + data
               if data.success is true
                 $('#exportMessage').text "Data register"
+<<<<<<< HEAD
                 $('#exportDiv').hide()
               else 
                 $('#exportMessage').text "No Data register"
@@ -83,6 +88,13 @@ html
             
           
             
+=======
+              else
+                $('#exportMessage').text "No Data register"
+            , 'json'
+
+
+>>>>>>> FETCH_HEAD
   body
 
     div#headerDiv
@@ -126,14 +138,22 @@ html
       h2 Hello
       p#loginText
       p
+<<<<<<< HEAD
       h3 Export
       p#exportMessage
       div#exportDiv
         p Click to export database and logout
         form#export(action="/export", method="post", role="form")
           input.btn.btn-primary#exportBtn(type='submit', value="Export & Logout")
+=======
+      h3 Export & Logout
+      p#exportMessage
+      p Click to export database and logout
+      form#export(action="/export", method="post", role="form")
+        input.btn.btn-primary#exportBtn(type='submit', value="Export & Logout")
+>>>>>>> FETCH_HEAD
 
-      
+
 
     footer
       p © 2014 - All rights reserved.
