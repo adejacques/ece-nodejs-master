@@ -49,7 +49,7 @@ app.use stylus.middleware
 app.use serve_static "#{__dirname}/../public"
 
 # declare variables
-global.client = db "./db/webapp1", { valueEncoding: 'json' }
+global.client = db "../db/webapp1", { valueEncoding: 'json' }
 isAlreadyImport = false
 
 # routing
@@ -133,10 +133,9 @@ app.post '/export', (req, res, next) ->
   console.log 'export bdd button function app'
   #Signup and login
   exportFunction()
-  res.redirect('/')
-  #res.json
-  #  mode: 'export'
-  #  success: true
+  res.json
+    mode: 'export'
+    success: true
 
 
 # Function export import

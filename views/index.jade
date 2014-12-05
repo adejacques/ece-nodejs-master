@@ -18,7 +18,7 @@ html
           $('.signupForm').hide()
           $('#messageOutput').hide()
           console.log 'ready'
-          
+
           $('#login').submit (e) ->
             $this = $(this)
             user =
@@ -67,20 +67,20 @@ html
                   $('#msgText').text "Your username or password is already register."
                   $('#messageOutput').show()
             , 'json'
-          ###
-          $('#exportMessage').submit (e) ->
+
+          $('#export').submit (e) ->
             $this = $(this)
             console.log "export submit"
             e.preventDefault()
-            $.post "/export", user, (data) ->
+            $.post "/export", (data) ->
               console.log "export: " + data
               if data.success is true
                 $('#exportMessage').text "Data register"
-              else 
+              else
                 $('#exportMessage').text "No Data register"
             , 'json'
-          ###
-            
+
+
   body
 
     div#headerDiv
@@ -125,12 +125,12 @@ html
       p#loginText
       p
       h3 Export & Logout
-      //p#exportMessage
+      p#exportMessage
       p Click to export database and logout
       form#export(action="/export", method="post", role="form")
         input.btn.btn-primary#exportBtn(type='submit', value="Export & Logout")
 
-      
+
 
     footer
       p © 2014 - All rights reserved.
