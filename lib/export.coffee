@@ -17,7 +17,7 @@ wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
 module.exports = (arrayToSave) ->
   # Catch error stringifier
   stringifier.on "error", (err) ->
-    consol.log err.message
+    console.log err.message
     return
 
   # Adding data during readable
