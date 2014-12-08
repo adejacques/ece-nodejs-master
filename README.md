@@ -69,9 +69,11 @@ http://localhost:1337/
 
 ### Run import
 With bash, go to home project directory.
+TODO
 
 ### Run export
 With bash, go to home project directory.
+TODO
 
 ### Run test
 With bash, go to home project directory.
@@ -82,6 +84,6 @@ npm test
 ```
 
 ## Contributors (groupe 07)
-Alexandre Dejacques : <dejacques@ece.fr> - <https://github.com/adejacques>
-Lauren Letestu : <letestu@ece.fr> - <https://github.com/lletestu>
-Thomas Pansart : <pansart@ece.fr> - <https://github.com/tpansart>
+* Alexandre Dejacques : <dejacques@ece.fr> - <https://github.com/adejacques>
+* Lauren Letestu : <letestu@ece.fr> - <https://github.com/lletestu>
+* Thomas Pansart : <pansart@ece.fr> - <https://github.com/tpansart>
