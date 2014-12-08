@@ -49,7 +49,7 @@ app.use stylus.middleware
 app.use serve_static "#{__dirname}/../public"
 
 # declare variables
-global.client = db "../db/webapp1", { valueEncoding: 'json' }
+global.client = db "#{__dirname}/../db/webapp1", { valueEncoding: 'json' }
 isAlreadyImport = false
 
 # routing
