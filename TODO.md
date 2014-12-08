@@ -73,7 +73,7 @@ export(client, format:'csv')
 (export: fichier coffee)
 '''
 
-# DEADLINE : 20
+# DEADLINE : 20 decembre !!!!!!!!
 # TODO
 * Comlepter le signup & bdd
 * validation erreur : password - re-password, pas déjà entrer etc.
@@ -102,9 +102,28 @@ Regarde dans index.jade si session existe et si oui affiche dahsboard et non sig
 2. BDD: ajout des champs & modifie signup avec validation
 3. Gestion des sessions pour garder la connection
 4. Test : ajouter import / export & réparer + app (service rest, formulaire, regarder sur npm comment tester serveur web - 3 requetes?)
+  * index avec email / username
+  * requetes http (pas pilotage interface) : web service
+  * web service: requete sign in (username, mail), sign up,
+    * localhost:1337/ => gestion des post
+    * Simulteur des requetes post: crawler : create new crowler: code 200 : sans erreur
 5. Completer le readme
+  * structure projet
+  * lancement app, export, import
+  * comment lancer les tests : commande
+  * mettre schema bdd (user & clé mail))
+  * ajouter nos mails : contributors : ... tout en bas readme
+  Contributors
+  -----------
+  * xxx : mail <mail> ou <https://github.com/nom>
+  * xxxx
 6. Structure vérifier: ajouter .npmignore
 
+
+# TODO POUR RENDU FINAL
+sauvegarder les log de l'user activité à chaque fois qu'il se log "timestamp"
+Supprime quand supérieur à une date
+quand il se log: afficher tableau avec son ip ou localisation ou ensemble page visité & afficher en tableau sur dashboard quand il est logué
 
 
 
