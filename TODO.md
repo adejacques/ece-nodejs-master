@@ -108,15 +108,6 @@ Regarde dans index.jade si session existe et si oui affiche dahsboard et non sig
     * localhost:1337/ => gestion des post
     * Simulteur des requetes post: crawler : create new crowler: code 200 : sans erreur
 5. Completer le readme
-  * structure projet
-  * lancement app, export, import
-  * comment lancer les tests : commande
-  * mettre schema bdd (user & clé mail))
-  * ajouter nos mails : contributors : ... tout en bas readme
-  Contributors
-  -----------
-  * xxx : mail <mail> ou <https://github.com/nom>
-  * xxxx
 6. Structure vérifier: ajouter .npmignore
 
 
