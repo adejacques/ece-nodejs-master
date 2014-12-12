@@ -38,8 +38,6 @@ p {
 #headerDiv h1 {
   margin-left: 10px;
   font-size: 28px;
-  text-align: right;
-  margin-right: 5px;
 }
 .borderPadding {
   padding: 20px;
@@ -64,6 +62,9 @@ p {
   background-color: #e6e6e6;
   padding: 30px;
   border-radius: 10px;
+}
+.row {
+  margin-left: 0;
 }
 footer {
   margin-top: 40px;

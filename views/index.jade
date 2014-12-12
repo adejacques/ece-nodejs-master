@@ -34,7 +34,9 @@ html
               if data.mode is 'login'
                 if data.success is true
                   # User login password and username is ok
-                  $('#loginText').text "Username: " + data.username + " - Password: " + data.password
+                  # $('#loginText').text "Username: " + data.username + " - Password: " + data.password
+                  $('#loginText').text "You are well logged : " + data.username + " !"
+                  $('#headerTitle').text data.username
                   $('#msgTitle').text "Login"
                   $('#msgText').text "You are well logged"
                   $('#signin').hide()
@@ -50,12 +52,14 @@ html
                 # Display signup form
                 $('.signupForm').show()
                 $('.signinForm').hide()
-                $('#headerTitle').text "SIGN UP AND LOG"
+                $('#headerTitle').text "Sign up and log"
               else if data.mode is 'signupAndLog'
                 # Save and log
                 if data.success is true
                   # User login password and username is ok
-                  $('#loginText').text "Username: " + data.username + " - Password: " + data.password
+                  # $('#loginText').text "Username: " + data.username + " - Password: " + data.password
+                  $('#headerTitle').text data.username
+                  $('#loginText').text "You are well logged : " + data.username + " !"
                   $('#msgTitle').text "Login"
                   $('#msgText').text "You are well registered and logged."
                   $('#signin').hide()
@@ -70,7 +74,6 @@ html
 
           $('#export').submit (e) ->
             $this = $(this)
-            console.log "export submit"
             e.preventDefault()
             $.post "/export", (data) ->
               console.log "export: " + data
@@ -80,11 +83,20 @@ html
               else
                 $('#exportMessage').text "No Data register"
             , 'json'
+          
+          $('#logout').submit (e) ->
+            $this = $(this)
+            console.log "logout submit"
+            e.preventDefault()
+            $.post "/logout", (data) ->
+              console.log "logout: " + data
+            , 'json'
+              
 
   body
 
     div#headerDiv
-      h1#headerTitle SIGN IN
+      h1#headerTitle Sign in
 
     div.jumbotron#messageOutput
       h1#msgTitle Message
@@ -123,12 +135,18 @@ html
     div#successLogin
       h2 Hello
       p#loginText
-      h3 Export
-      p#exportMessage
-      div#exportDiv
-        p Click to export database and logout
+      
+      div#exportDiv.row
+        h2 Export database
+        p#exportMessage
+        p Click to export database
         form#export(action="/export", method="post", role="form")
-          input.btn.btn-primary#exportBtn(type='submit', value="Export")
+          input.btn.btn-primary.col-md-1#exportBtn(type='submit', value="Export")
+      div#logout.row
+        h2 Logout
+        p Click to logout
+        form#logout(action="/logout", method="post", role="form")
+          input.btn.btn-primary.col-md-1#logoutBtn(type='submit', value="Logout")
 
     footer
       p © 2014 - All rights reserved.

@@ -32,7 +32,13 @@ app.use bodyParser.json()
 app.use bodyParser.urlencoded()
 app.use cookieParser 'toto'
 app.use methodOverride '_method'
-app.use session secret: 'toto', resave: true, saveUninitialized: true
+app.use session(
+  secret: 'toto'
+  resave: true
+  saveUninitialized: true
+  cookie:
+    secure: true
+)
 
 app.use coffee
   src: "#{__dirname}/../views"
@@ -55,11 +61,18 @@ isAlreadyImport = false
 # routing
 app.get '/', (req, res, next) ->
   # Import user csv to populate bdd if it is not already done (in case of reload page)
-  importFunction()
-  res.render 'index', title: 'Express'
+  #importFunction()
+  sess = req.session
+  if sess.username
+    console.log("if")
+    console.log(sess.username)
+  else
+    console.log("call render")
+    res.render 'index', title: 'My app'
 
 app.post '/login', (req, res, next) ->
   console.log req.body
+  sess = req.session
   #TODO TEST Return True or false
   if req.body.button is 'Login'
     #Login user
@@ -71,11 +84,12 @@ app.post '/login', (req, res, next) ->
           client.users.get email.username
           , (user) ->
             if user.password is req.body.password
+             sess.username = req.body.username
              res.json
                mode: 'login'
                success: true
                username: req.body.username
-               password: req.body.password
+               #password: req.body.password
             else
              res.json
                mode: 'login'
@@ -85,11 +99,12 @@ app.post '/login', (req, res, next) ->
            , (user) ->
               console.log user
               if user.username is req.body.username and user.password is req.body.password
+                sess.username = req.body.username
                 res.json
                   mode: 'login'
                   success: true
                   username: req.body.username
-                  password: req.body.password
+                  #password: req.body.password
               else
                 res.json
                   mode: 'login'
@@ -127,7 +142,7 @@ app.post '/login', (req, res, next) ->
                  mode: 'signupAndLog'
                  success: true
                  username: req.body.username
-                 password: req.body.password
+                 #password: req.body.password
 
 app.post '/export', (req, res, next) ->
   console.log 'export bdd button function app'
@@ -136,6 +151,18 @@ app.post '/export', (req, res, next) ->
   res.json
     mode: 'export'
     success: true
+
+app.post '/logout', (req, res, next) ->
+  console.log("logout post")
+  req.session.destroy()
+  res.redirect '/'
+  #req.session.destroy (err) ->
+  #  if err
+  #    console.log err
+  #  else
+  #    console.log "redirect"
+  #    res.redirect "/"
+  #  return
 
 # Function export import
 exportFunction = ->
