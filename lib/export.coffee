@@ -25,6 +25,10 @@ module.exports = (arrayToSave) ->
     data += row  while row = stringifier.read()
     return
 
+  #stringifier.on "writable", (err) ->
+  #  data += row  while row = stringifier.read()
+  #  return
+
   # Write on csv file at the end
   stringifier.on "finish", ->
     console.log "end:" + data

@@ -19,10 +19,11 @@ module.exports = (client) ->
     console.log "[ERROR] " + err.message
     return
 
-
   # Save record in output during readable action
   parser.on "readable", ->
-    output.push record  while record = parser.read()
+    while record = parser.read()
+      #output.push record
+      registerUser record
     return
 
   # Function to save user in db
@@ -56,14 +57,14 @@ module.exports = (client) ->
     return
 
   # When parser are done, save in database user
-  parser.on "finish", ->
-    i = 0
+  #parser.on "finish", ->
+  #  i = 0
 
-    while i < output.length
-      myuser = output[i]
-      registerUser  myuser
-      ++i
-    return
+    #while i < output.length
+    #  myuser = output[i]
+    #  registerUser  myuser
+    #  ++i
+  #  return
 
   # Do pipe
   importUser: () ->

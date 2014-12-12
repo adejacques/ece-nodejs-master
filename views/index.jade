@@ -87,10 +87,10 @@ html
           $('#logout').submit (e) ->
             $this = $(this)
             console.log "logout submit"
-            e.preventDefault()
-            $.post "/logout", (data) ->
-              console.log "logout: " + data
-            , 'json'
+            # e.preventDefault()
+            # $.post "/logout", (data) ->
+            # return
+            # , 'json'
               
 
   body

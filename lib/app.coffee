@@ -36,8 +36,6 @@ app.use session(
   secret: 'toto'
   resave: true
   saveUninitialized: true
-  cookie:
-    secure: true
 )
 
 app.use coffee
@@ -61,14 +59,16 @@ isAlreadyImport = false
 # routing
 app.get '/', (req, res, next) ->
   # Import user csv to populate bdd if it is not already done (in case of reload page)
-  #importFunction()
+  # importFunction()
   sess = req.session
   if sess.username
     console.log("if")
     console.log(sess.username)
+    res.status(200)
   else
     console.log("call render")
     res.render 'index', title: 'My app'
+  return
 
 app.post '/login', (req, res, next) ->
   console.log req.body
@@ -155,14 +155,8 @@ app.post '/export', (req, res, next) ->
 app.post '/logout', (req, res, next) ->
   console.log("logout post")
   req.session.destroy()
+  #res.send('You are logged out ! <meta http-equiv="refresh" content="5; URL=/">')
   res.redirect '/'
-  #req.session.destroy (err) ->
-  #  if err
-  #    console.log err
-  #  else
-  #    console.log "redirect"
-  #    res.redirect "/"
-  #  return
 
 # Function export import
 exportFunction = ->

@@ -1,4 +1,8 @@
 #!/usr/local/bin/node
+
+
+
+/*
 var fs = require('fs');
 var parse = require('csv-parse');
 //var csv = require('csv');
@@ -43,7 +47,7 @@ function saveUser(user) {
 // Call pipe function
 //source.pipe(parser).pipe(csv.stringify()).pipe(process.stdout);
 source.pipe(parser);
-
+*/
 
 /* ------- TEST ------- */
 /*
