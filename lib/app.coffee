@@ -115,34 +115,55 @@ app.post '/login', (req, res, next) ->
     res.json
       mode: 'signup'
   else if req.body.button is 'SignupAndLog'
-    #Signup and login
-    client.users.get req.body.username
-    , (user) ->
-      if user.username is req.body.username
-        res.json
-           mode: 'signupAndLog'
-           success: false
+    passwordOk = false;
+    error = '';
+
+    verification = ->
+      if req.body.username is "" or req.body.email is "" or req.body.password is "" or req.body.repassword is ""
+        passwordOk = false
+        error = 'fieldsEmpty'
+      else if req.body.password is req.body.repassword
+        passwordOk = true
       else
-         client.users.set req.body.username,
-           password: req.body.password
-         , (err) ->
-           console.log 'erreur set' if err
-         client.emails.set req.body.email,
-           username: req.body.username
-         , (err) ->
-           console.log 'erreur set' if err
-         client.emails.get req.body.email
-         , (email) ->
-            console.log email
-         client.users.get req.body.username
-         , (user) ->
-             console.log user
-             if user.username is req.body.username and user.password is req.body.password
-               res.json
-                 mode: 'signupAndLog'
-                 success: true
-                 username: req.body.username
-                 #password: req.body.password
+        error = 'passwordNotOk'
+    #Signup and login
+    #res.json
+      #mode: 'signupAndLog'
+    do verification
+    console.log "error : " + error
+    if passwordOk is true
+      client.users.get req.body.username
+      , (user) ->
+        if user.username is req.body.username
+          res.json
+             mode: 'signupAndLog'
+             success: false
+        else
+           client.users.set req.body.username,
+             password: req.body.password
+           , (err) ->
+             console.log 'erreur set' if err
+           client.emails.set req.body.email,
+             username: req.body.username
+           , (err) ->
+             console.log 'erreur set' if err
+           client.emails.get req.body.email
+           , (email) ->
+              console.log email
+           client.users.get req.body.username
+           , (user) ->
+               console.log user
+               if user.username is req.body.username and user.password is req.body.password
+                 res.json
+                   mode: 'signupAndLog'
+                   success: true
+                   username: req.body.username
+                   password: req.body.password
+    else if passwordOk is false
+      res.json
+        mode: 'signupAndLog'
+        success: error
+
 
 app.post '/export', (req, res, next) ->
   console.log 'export bdd button function app'

@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-### Copyright (c) 2014 - Alexandre Dejacques | Lauren Letest | Thomas Pansart
+### Copyright (c) 2014 - Alexandre Dejacques | Lauren Letestu | Thomas Pansart
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -25,6 +25,9 @@ html
               username: $('#login-username').val()
               email: $('#login-email').val()
               password: $('#login-password').val()
+              repassword: $('#login-password-confirmation').val()
+              firstname: $('#login-firstname').val()
+              lastname: $('#login-lastname').val()
               button: $('#btn').val()
             console.log 'user', user
             e.preventDefault()
@@ -54,6 +57,7 @@ html
                 $('.signinForm').hide()
                 $('#headerTitle').text "Sign up and log"
               else if data.mode is 'signupAndLog'
+                console.log data.success
                 # Save and log
                 if data.success is true
                   # User login password and username is ok
@@ -65,10 +69,17 @@ html
                   $('#signin').hide()
                   $('#messageOutput').show()
                   $('#successLogin').show()
-
-                else
+                else if data.success is false
                   $('#msgTitle').text "Error"
                   $('#msgText').text "Your username or password is already register."
+                  $('#messageOutput').show()
+                else if data.success is 'passwordNotOk'
+                  $('#msgTitle').text "Error"
+                  $('#msgText').text "Your passwords are not the same."
+                  $('#messageOutput').show()
+                else if data.success is 'fieldsEmpty'
+                  $('#msgTitle').text "Error"
+                  $('#msgText').text "All fields are not filled."
                   $('#messageOutput').show()
             , 'json'
 
@@ -83,7 +94,7 @@ html
               else
                 $('#exportMessage').text "No Data register"
             , 'json'
-          
+
           $('#logout').submit (e) ->
             $this = $(this)
             console.log "logout submit"
@@ -91,7 +102,7 @@ html
             # $.post "/logout", (data) ->
             # return
             # , 'json'
-              
+
 
   body
 
@@ -117,12 +128,27 @@ html
               label(for="login-email") Email
             td
               input#login-email.form-control(type='text', name="email", placehoder="Mail")
+          tr.form-group.signupForm
+            th
+              label(for="login-firstname") FirstName
+            td
+              input#login-firstname.form-control(type='text', name="firstname", placehoder="Firstname")
+          tr.form-group.signupForm
+            th
+              label(for="login-lastname") LastName
+            td
+              input#login-lastname.form-control(type='text', name="lastname", placehoder="Lastname")
 
           tr.form-group
             th
               label(for="login-password") Password
             td
               input#login-password.form-control(type='password', name="password")
+          tr.form-group.signupForm
+            th
+              label(for="login-password-confirmation") Re-Password
+            td
+              input#login-password-confirmation.form-control(type='password', name="password_confirmation", placehoder="Password_confirmation")
 
           tr.form-group
             th
@@ -135,7 +161,7 @@ html
     div#successLogin
       h2 Hello
       p#loginText
-      
+
       div#exportDiv.row
         h2 Export database
         p#exportMessage
