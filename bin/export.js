@@ -1,39 +1,48 @@
-#!/usr/local/bin/node
-var fs = require('fs');
-// Flag 'a' append at the end
-var wstream = fs.createWriteStream(__dirname + '/../public/resources/users.csv', {'flags': 'a'});
-// Flag 'w' remove all and write
-//var wstream = fs.createWriteStream(__dirname + '/../public/resources/users.csv', {'flags': 'w'});
-var stringify = require('csv-stringify');
-var csv = require('csv');
+require('coffee-script/register')
 
-var stringifier = stringify({delimiter: ';'})
-var data = '';
+var myexport = require('../lib/export');
+var db = require('../lib/db');
+var argv = require('minimist')(process.argv.slice(2));
 
-// Catch error stringifier
-stringifier.on('error', function(err){
-  consol.log(err.message);
+var client = db("" + __dirname + "/../db/webapp1", {
+  valueEncoding: 'json'
 });
 
-// Adding data during readable
-stringifier.on('readable', function(){
-  while(row = stringifier.read()){
-    data += row;
-  }
-});
+var exportFunction = function() {
+  var output;
+  output = [];
+  client.users.getAll(function(outputBdd) {
+    var expt, halfSize, i, j;
+    halfSize = outputBdd.length / 2;
+    i = 0;
+    console.log(outputBdd);
+    while (i < halfSize) {
+      j = halfSize;
+      while (j < outputBdd.length) {
+        if (outputBdd[i][0] === outputBdd[j][1]) {
+          output.push([outputBdd[i][0], outputBdd[j][0], outputBdd[i][1]]);
+          break;
+        }
+        j++;
+      }
+      i++;
+    }
+    console.log(output)
+    expt = myexport(output);
+    return expt.exportUser();
+  });
+};
 
-// Write on csv file at the end
-stringifier.on('finish', function(){
-  console.log('end:'+data);
-  wstream.write(data);
-});
-
-
-var arr = [[ "blup","blup@ece.fr","blup"], [ "blouip","blouip@ece.fr","blouip"]];
-
-for (var i = 0; i<arr.length; i++) {
-  stringifier.write(arr[i]);
+if (argv.help) {
+  console.log("\n\nExport function\nCommand : export [--help] [--format {name}]\n--help : show help\n--format : csv (default) or json\n\n");
 }
 
-stringifier.end();
-wstream.end();
+if (argv.format) {
+  console.log(argv.format);
+  if (argv.format === 'json') {
+    // Export to json
+  } else {
+    // Default export to csv
+    exportFunction();
+  }
+}

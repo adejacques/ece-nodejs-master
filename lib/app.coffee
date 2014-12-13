@@ -62,11 +62,9 @@ app.get '/', (req, res, next) ->
   # importFunction()
   sess = req.session
   if sess.username
-    console.log("if")
     console.log(sess.username)
     res.status(200)
   else
-    console.log("call render")
     res.render 'index', title: 'My app'
   return
 
@@ -186,7 +184,7 @@ exportFunction = ->
   client.users.getAll (outputBdd) ->
     halfSize = outputBdd.length / 2
     i = 0
-
+    console.log outputBdd
     while i < halfSize
       j = halfSize
 

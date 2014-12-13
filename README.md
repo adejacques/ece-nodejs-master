@@ -69,11 +69,15 @@ http://localhost:1337/
 
 ### Run import
 With bash, go to home project directory.
-TODO
+```bash
+node bin/import [--help] [--format {name}]
+```
 
 ### Run export
 With bash, go to home project directory.
-TODO
+```bash
+node bin/export [--help] [--format {name}] 
+```
 
 ### Run test
 With bash, go to home project directory.
