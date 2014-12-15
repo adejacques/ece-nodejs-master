@@ -182,6 +182,7 @@ app.post '/login', (req, res, next) ->
            client.users.set req.body.username,
              password: req.body.password
              firstname: req.body.firstname
+             lastname: req.body.lastname
            , (err) ->
              console.log 'erreur set' if err
            client.emails.set req.body.email,
@@ -227,29 +228,32 @@ exportFunction = ->
   client.users.getAll (outputBdd) ->
     #halfSize = outputBdd.length / 2
     i = 0
-    j = outputBdd.length/3
+    j = outputBdd.length/4
     max = outputBdd.length - j
-    console.log 'max:'+max+' j:'+j
-
+    #console.log 'max:'+max+' j:'+j
+    console.log outputBdd
     while i < max
-      console.log outputBdd[i]
+      #console.log outputBdd[i]
       username = outputBdd[i][0]
-      firstname = outputBdd[i][1]
-      password = outputBdd[i+1][1]
-      console.log "user:" + username + " pass:"+password+"firstn"+firstname
+      lastname = outputBdd[i][1]
+      firstname = outputBdd[i+1][1]
+      password = outputBdd[i+2][1]
+      console.log "user:" + username + " pass:"+password+" firstn:"+firstname+" lastn:"+lastname
 
       while j < outputBdd.length
-        console.log outputBdd[j]
+        console.log j + ":"+ outputBdd[j]
+        #if typeof(outputBdd[j]) is not "undefined"
         if username is outputBdd[j][1]
           output.push [
             username
             outputBdd[j][0]
             password
             firstname
+            lastname
           ]
           break
         j++
-      i = i+2
+      i = i+3
 
     #console.log outputBdd
     #while i < outputBdd.length

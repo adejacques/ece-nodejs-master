@@ -33,6 +33,7 @@ module.exports = (client) ->
       myuser[1] mail
       myuser[2] password
       myuser[3] firstname
+      myuser[4] lastname
     ###
     #console.log "username: " + myuser[0] + " - mail: " + myuser[1] + " - password: " + myuser[2]
 
@@ -44,6 +45,7 @@ module.exports = (client) ->
          myClient.users.set myuser[0],
            password: myuser[2]
            firstname: myuser[3]
+           lastname: myuser[4]
          , (err) ->
            console.log 'error set user:' + err if err
          myClient.emails.set myuser[1],
