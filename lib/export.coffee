@@ -14,7 +14,7 @@ wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
 )
 
 
-module.exports = (arrayToSave) ->
+module.exports = (arrayToSave, format) ->
   # Catch error stringifier
   stringifier.on "error", (err) ->
     console.log err.message

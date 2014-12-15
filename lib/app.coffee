@@ -21,9 +21,21 @@ should = require 'should'
 myimport = require "../lib/import"
 myexport = require "../lib/export"
 
+mySocket = []
 # config = require '../conf/hdfs'
 
 app = express()
+
+server = http.Server(app)
+io = require('socket.io')(server)
+
+io.on 'connection', (socket) ->
+  mySocket.push socket
+  #socket.on 'login',
+  socket.emit 'news', hello: 'world'
+  #socket.on 'my other event', (data) ->
+  #  console.log data
+
 
 app.set 'views', __dirname + '/../views'
 app.set 'view engine', 'jade'
@@ -59,7 +71,7 @@ isAlreadyImport = false
 # routing
 app.get '/', (req, res, next) ->
   # Import user csv to populate bdd if it is not already done (in case of reload page)
-  # importFunction()
+  importFunction()
   sess = req.session
   if sess.username
     console.log(sess.username)
@@ -71,23 +83,26 @@ app.get '/', (req, res, next) ->
 app.post '/login', (req, res, next) ->
   console.log req.body
   sess = req.session
+  isRightUser = false
   #TODO TEST Return True or false
   if req.body.button is 'Login'
     #Login user
     client.emails.get req.body.username
     , (email) ->
+        console.log "mail"
         console.log email
         console.log req.body.username
         if email.emailname is req.body.username
           client.users.get email.username
           , (user) ->
             if user.password is req.body.password
-             sess.username = req.body.username
-             res.json
-               mode: 'login'
-               success: true
-               username: req.body.username
-               #password: req.body.password
+              #  isRightUser = true
+              sess.username = req.body.username
+              res.json
+                 mode: 'login'
+                 success: true
+                 username: req.body.username
+                 password: req.body.password
             else
              res.json
                mode: 'login'
@@ -95,18 +110,52 @@ app.post '/login', (req, res, next) ->
          else
            client.users.get req.body.username
            , (user) ->
+              console.log "user"
               console.log user
               if user.username is req.body.username and user.password is req.body.password
                 sess.username = req.body.username
+                for socket, i in mySocket
+                  socket.emit 'login', username: req.body.username, crdate: Date.now()
+                  console.log "emit", i
+
                 res.json
                   mode: 'login'
                   success: true
                   username: req.body.username
-                  #password: req.body.password
+                    #password: req.body.password
               else
                 res.json
                   mode: 'login'
                   success:false
+                #isRightUser = true
+                #console.log "is logged !"
+              #else
+                #console.log "is not logged !"
+
+
+              #console.log "user resp:"+isRightUser
+              #if isRightUser is true
+              #  console.log "last is logged !"
+              #  sess.username = req.body.username
+                ###
+                for socket, i in socket
+                  socket.emit 'login', username: "aa", crdate: Date.now()
+                  console.log "emit" + i
+                  ###
+                #socket.emit 'login', username: "aa", crdate: Date.now()
+                #io.on 'connection', (socket) ->
+                #  socket.emit 'news', hello: 'world'
+                #  socket.on 'my other event', (data) ->
+                #    console.log data
+                #res.json
+                #  mode: 'login'
+                #  success: true
+                #  username: req.body.username
+              #else
+              #  console.log "last not is logged !"
+              #  res.json
+              #    mode: 'login'
+              #    success:false
 
   else if req.body.button is 'Signup'
     #Change to signup form
@@ -139,6 +188,7 @@ app.post '/login', (req, res, next) ->
         else
            client.users.set req.body.username,
              password: req.body.password
+             #firstname: req.body.firstname
            , (err) ->
              console.log 'erreur set' if err
            client.emails.set req.body.email,
@@ -182,13 +232,39 @@ exportFunction = ->
   output = []
 
   client.users.getAll (outputBdd) ->
-    halfSize = outputBdd.length / 2
+    #halfSize = outputBdd.length / 2
     i = 0
-    console.log outputBdd
-    while i < halfSize
-      j = halfSize
+    j = outputBdd.length/3
+    max = outputBdd.length - j
+    console.log 'max:'+max+' j:'+j
+
+    while i < max
+      console.log outputBdd[i]
+      username = outputBdd[i][0]
+      firstname = outputBdd[i][1]
+      password = outputBdd[i+1][1]
+      console.log "user:" + username + " pass:"+password+"firstn"+firstname
 
       while j < outputBdd.length
+        console.log outputBdd[j]
+        if username is outputBdd[j][1]
+          output.push [
+            username
+            outputBdd[j][0]
+            password
+            firstname
+          ]
+          break
+        j++
+      i = i+2
+
+    #console.log outputBdd
+    #while i < outputBdd.length
+    #  j = halfSize
+    #  console.log outputBdd[i]
+      ###
+      while j < outputBdd.length
+        console.log outputBdd[j]
         if outputBdd[i][0] is outputBdd[j][1]
           output.push [
             outputBdd[i][0]
@@ -197,12 +273,12 @@ exportFunction = ->
           ]
           break
         j++
-      i++
+        ###
+      #i++
 
     expt = myexport output
     expt.exportUser()
 
-  console.log 'exported function'
   return
 
 importFunction = ->
@@ -224,4 +300,5 @@ app.use serve_index "#{__dirname}/../public"
 if process.env.NODE_ENV is 'development'
   app.use errorhandler()
 
-module.exports = app
+#module.exports = app
+module.exports = server

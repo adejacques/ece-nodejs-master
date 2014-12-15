@@ -11,14 +11,24 @@ html
     meta(name="viewport", content="width=device-width, initial-scale=1")
     script(type='text/javascript', src='vendors/jquery-1.11.1.min.js')
     script(type='text/javascript', src='vendors/bootstrap/js/bootstrap.min.js')
+    script(src="/socket.io/socket.io.js")
     script
-      :coffee
-        $().ready ->
+      :coffee 
+        $().ready ->        
           $('#successLogin').hide()
           $('.signupForm').hide()
           $('#messageOutput').hide()
           console.log 'ready'
-
+          
+          socket = io('http://localhost');
+          socket.on "news", (data) ->
+            console.log data
+          socket.on "login", (data) ->
+            console.log data
+            $('#data').append """
+              <tr><td>#{data.username}</td><td>#{data.crdate}</td></tr>
+            """ 
+          
           $('#login').submit (e) ->
             $this = $(this)
             user =
@@ -161,6 +171,13 @@ html
     div#successLogin
       h2 Hello
       p#loginText
+      
+      talbe#data
+        tr.form-group
+          th
+            span Username
+          td
+            span Information
 
       div#exportDiv.row
         h2 Export database

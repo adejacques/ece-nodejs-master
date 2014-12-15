@@ -44,8 +44,9 @@ Use REST server and level database to create web application. This site allow us
 ├── README.md             # Read me
 └── License.md            # License
 ```
-## Database schema
-TODO
+## LevelDB schema
+User namespace key: "users:#{username}:#{property}:" properties: "lastname", "firstname", "email" and "password"
+Email namespace key: "users:#{username}:#{property}:" properties: "email"
 
 ## Installation & run
 
@@ -76,7 +77,7 @@ node bin/import [--help] [--format {name}]
 ### Run export
 With bash, go to home project directory.
 ```bash
-node bin/export [--help] [--format {name}] 
+node bin/export [--help] [--format {name}]
 ```
 
 ### Run test
