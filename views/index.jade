@@ -21,13 +21,24 @@ html
           console.log 'ready'
           
           socket = io('http://localhost');
-          socket.on "news", (data) ->
-            console.log data
           socket.on "login", (data) ->
             console.log data
             $('#data').append """
-              <tr><td>#{data.username}</td><td>#{data.crdate}</td></tr>
+              <tr  id="#{data.username}">
+                <td>#{data.username}</td>
+                <td>
+                  <div class="info">#{data.crdate}</div>
+                  <div class="count">0</div>
+                  <div class="logs"></div>
+                </td>
+              </tr>
             """ 
+          socket.on "logs", (data) ->
+            console.log "on log"
+            return if not data.username or data.username is "anomymous"
+            console.log "is define"
+            $('#' + data.username + ' .count').html data.count
+            $('#' + data.username + ' .logs').append "<div>#{data.url}</div>"
           
           $('#login').submit (e) ->
             $this = $(this)

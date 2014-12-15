@@ -19,6 +19,21 @@ module.exports = (db="#{__dirname}../db") ->
         callback err if callback and typeof (callback) is "function"
       .on 'end', ->
         callback 'end!'
+    getPassword: (username, callback) ->
+      user = {}
+      db.createReadStream
+        gt: "users:#{username}:"
+      .on 'data', (data) ->
+        [_, username, key] = data.key.split ':'
+        user.username ?= username
+        user[key] = data.value
+        if user.username is username and key is "password"
+          console.log key
+          callback user
+      .on 'error', (err) ->
+        callback err if callback and typeof (callback) is "function"
+      .on 'end', ->
+        callback 'end!'
     getAll: (callback) ->
       pers = {}
       output = []

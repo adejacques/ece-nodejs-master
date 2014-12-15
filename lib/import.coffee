@@ -43,7 +43,7 @@ module.exports = (client) ->
       else
          myClient.users.set myuser[0],
            password: myuser[2]
-           #firstname: myuser[3]
+           firstname: myuser[3]
          , (err) ->
            console.log 'error set user:' + err if err
          myClient.emails.set myuser[1],

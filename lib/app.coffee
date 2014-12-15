@@ -31,10 +31,6 @@ io = require('socket.io')(server)
 
 io.on 'connection', (socket) ->
   mySocket.push socket
-  #socket.on 'login',
-  socket.emit 'news', hello: 'world'
-  #socket.on 'my other event', (data) ->
-  #  console.log data
 
 
 app.set 'views', __dirname + '/../views'
@@ -63,6 +59,21 @@ app.use stylus.middleware
     .set('compress', config?.css?.compress)
     .use nib()
 app.use serve_static "#{__dirname}/../public"
+
+
+app.use (req,res,next) ->
+  req.session.count ?= 0
+  req.session.count++
+  req.session.history ?= []
+  req.session.history.push req.url
+
+  for socket , i in mySocket
+    socket.emit 'logs',
+      username: req.session.username or "anonymous"
+      count: req.session.count
+      url: req.url
+  next()
+
 
 # declare variables
 global.client = db "#{__dirname}/../db/webapp1", { valueEncoding: 'json' }
@@ -93,11 +104,18 @@ app.post '/login', (req, res, next) ->
         console.log email
         console.log req.body.username
         if email.emailname is req.body.username
-          client.users.get email.username
+          client.users.getPassword email.username
           , (user) ->
             if user.password is req.body.password
               #  isRightUser = true
               sess.username = req.body.username
+
+              # Add socket io message login
+              for socket, i in mySocket
+                socket.emit 'login',
+                  username: req.session.username or "anonymous"
+                  crdate: Date.now()
+
               res.json
                  mode: 'login'
                  success: true
@@ -108,15 +126,19 @@ app.post '/login', (req, res, next) ->
                mode: 'login'
                success:false
          else
-           client.users.get req.body.username
+           client.users.getPassword req.body.username
            , (user) ->
               console.log "user"
               console.log user
               if user.username is req.body.username and user.password is req.body.password
                 sess.username = req.body.username
+                req.session.username = req.body.username
+
+                # Add socket io message login
                 for socket, i in mySocket
-                  socket.emit 'login', username: req.body.username, crdate: Date.now()
-                  console.log "emit", i
+                  socket.emit 'login',
+                    username: req.session.username or "anonymous"
+                    crdate: Date.now()
 
                 res.json
                   mode: 'login'
@@ -127,35 +149,6 @@ app.post '/login', (req, res, next) ->
                 res.json
                   mode: 'login'
                   success:false
-                #isRightUser = true
-                #console.log "is logged !"
-              #else
-                #console.log "is not logged !"
-
-
-              #console.log "user resp:"+isRightUser
-              #if isRightUser is true
-              #  console.log "last is logged !"
-              #  sess.username = req.body.username
-                ###
-                for socket, i in socket
-                  socket.emit 'login', username: "aa", crdate: Date.now()
-                  console.log "emit" + i
-                  ###
-                #socket.emit 'login', username: "aa", crdate: Date.now()
-                #io.on 'connection', (socket) ->
-                #  socket.emit 'news', hello: 'world'
-                #  socket.on 'my other event', (data) ->
-                #    console.log data
-                #res.json
-                #  mode: 'login'
-                #  success: true
-                #  username: req.body.username
-              #else
-              #  console.log "last not is logged !"
-              #  res.json
-              #    mode: 'login'
-              #    success:false
 
   else if req.body.button is 'Signup'
     #Change to signup form
@@ -188,7 +181,7 @@ app.post '/login', (req, res, next) ->
         else
            client.users.set req.body.username,
              password: req.body.password
-             #firstname: req.body.firstname
+             firstname: req.body.firstname
            , (err) ->
              console.log 'erreur set' if err
            client.emails.set req.body.email,
