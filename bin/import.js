@@ -8,8 +8,8 @@ var client = db("" + __dirname + "/../db/webapp1", {
   valueEncoding: 'json'
 });
 
-var importFunction = function() {
-  var imt = myimport(client);
+var importFunction = function(format) {
+  var imt = myimport(client, format);
   imt.importUser();
 };
 
@@ -19,10 +19,10 @@ if (argv.help) {
 
 if (argv.format) {
   console.log(argv.format);
+  var format = "csv";
   if (argv.format === 'json') {
     // Export to json
-  } else {
-    // Default export to csv
-    importFunction();
+    format = "json";
   }
+  importFunction(format);
 }

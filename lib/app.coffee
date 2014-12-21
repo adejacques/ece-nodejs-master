@@ -255,24 +255,6 @@ exportFunction = ->
         j++
       i = i+3
 
-    #console.log outputBdd
-    #while i < outputBdd.length
-    #  j = halfSize
-    #  console.log outputBdd[i]
-      ###
-      while j < outputBdd.length
-        console.log outputBdd[j]
-        if outputBdd[i][0] is outputBdd[j][1]
-          output.push [
-            outputBdd[i][0]
-            outputBdd[j][0]
-            outputBdd[i][1]
-          ]
-          break
-        j++
-        ###
-      #i++
-
     expt = myexport output
     expt.exportUser()
 

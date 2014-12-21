@@ -42,7 +42,20 @@ var exportFunction = function(format) {
       while (j < outputBdd.length) {
         console.log(j + ":" + outputBdd[j]);
         if (username === outputBdd[j][1]) {
-          output.push([username, outputBdd[j][0], password, firstname, lastname]);
+          if (format == "json") {
+            var item = {
+              "username": username,
+              "email": outputBdd[j][0],
+              "password": password,
+              "firstname": firstname,
+              "lastname": lastname
+            };
+
+            output.push(item);
+
+          } else {
+            output.push([username, outputBdd[j][0], password, firstname, lastname]);
+          }
           break;
         }
         j++;
