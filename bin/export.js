@@ -8,11 +8,13 @@ var client = db("" + __dirname + "/../db/webapp1", {
   valueEncoding: 'json'
 });
 
-var exportFunction = function() {
-  var output;
+var exportFunction = function(format) {
+  var output, firstname, i, j, lastname, max, password, username;
   output = [];
+  console.log("ex");
   client.users.getAll(function(outputBdd) {
-    var expt, halfSize, i, j;
+
+    /*var expt, halfSize, i, j;
     halfSize = outputBdd.length / 2;
     i = 0;
     console.log(outputBdd);
@@ -26,9 +28,30 @@ var exportFunction = function() {
         j++;
       }
       i++;
+    }*/
+    i = 0;
+    j = outputBdd.length / 4;
+    max = outputBdd.length - j;
+
+    while (i < max) {
+      username = outputBdd[i][0];
+      lastname = outputBdd[i][1];
+      firstname = outputBdd[i + 1][1];
+      password = outputBdd[i + 2][1];
+      console.log("user:" + username + " pass:" + password + " firstn:" + firstname + " lastn:" + lastname);
+      while (j < outputBdd.length) {
+        console.log(j + ":" + outputBdd[j]);
+        if (username === outputBdd[j][1]) {
+          output.push([username, outputBdd[j][0], password, firstname, lastname]);
+          break;
+        }
+        j++;
+      }
+      i = i + 3;
     }
-    console.log(output)
-    expt = myexport(output);
+    console.log("out");
+    console.log(output);
+    expt = myexport(output, format);
     return expt.exportUser();
   });
 };
@@ -38,11 +61,11 @@ if (argv.help) {
 }
 
 if (argv.format) {
-  console.log(argv.format);
+  var format = "csv";
   if (argv.format === 'json') {
     // Export to json
-  } else {
-    // Default export to csv
-    exportFunction();
+    format = "json";
   }
+  console.log(format);
+  exportFunction(format);
 }
