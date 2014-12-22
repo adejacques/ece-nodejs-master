@@ -1,18 +1,23 @@
 fs = require "fs"
-parse = require "csv-parse"
-parser = parse(delimiter: ";")
-source = fs.createReadStream(__dirname + "/../public/resources/users.csv")
-output = []
 db = require "../lib/db"
+parse = require "csv-parse"
+JSONStream = require "JSONStream"
+es = require "event-stream"
+
+parser = parse(delimiter: ";")
+
+output = []
+myformat = "csv"
+
+source = fs.createReadStream(__dirname + "/../public/resources/users.csv")
 
 module.exports = (client, format) ->
   myClient = client
-
+  myformat = format if format
   # Catch error read file
   source.on "error", ->
     console.log "[ERROR] " + error.message
     return
-
 
   # Catch error password
   parser.on "error", (err) ->
@@ -22,9 +27,16 @@ module.exports = (client, format) ->
   # Save record in output during readable action
   parser.on "readable", ->
     while record = parser.read()
+      #console.log record
       #output.push record
       registerUser record
     return
+
+  getStream = ->
+    jsonData = __dirname + "/../public/resources/export.json"
+    stream = fs.createReadStream(jsonData,encoding: "utf8")
+    parserJson = JSONStream.parse("*")
+    stream.pipe parserJson
 
   # Function to save user in db
   registerUser = (myuser) ->
@@ -35,8 +47,6 @@ module.exports = (client, format) ->
       myuser[3] firstname
       myuser[4] lastname
     ###
-    #console.log "username: " + myuser[0] + " - mail: " + myuser[1] + " - password: " + myuser[2]
-
     myClient.users.get myuser[0]
     , (user) ->
       if user.username is myuser[0]
@@ -63,8 +73,17 @@ module.exports = (client, format) ->
   # Do pipe
   importUser: () ->
     console.log 'import user call'
-    if format is "csv"
-      source.pipe parser
+    if format is "json"
+      getStream().pipe es.mapSync((data) ->
+        #console.log(data);
+        i = 0
+        while i < data.length
+          console.log "user " + i + " : "
+          dataStore = [data[i].username, data[i].email, data[i].password, data[i].firstname, data[i].lastname]
+          registerUser dataStore
+          i++
+        return
+      )
     else
-      source.pipe.parser
+      source.pipe parser
     return

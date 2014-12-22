@@ -253,7 +253,9 @@ exportFunction = ->
           ]
           break
         j++
+
       i = i+3
+      j = outputBdd.length/4
 
     expt = myexport output
     expt.exportUser()

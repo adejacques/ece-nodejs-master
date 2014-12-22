@@ -30,7 +30,7 @@ wstreamJSON = fs.createWriteStream(__dirname + "/../public/resources/export.json
 
 module.exports = (arrayToSave, format) ->
   myformat = format if format
-  console.log "forma:"+myformat
+
   if myformat is "json"
     wstream = fs.createWriteStream(__dirname + "/../public/resources/export.json",
       flags: "w"

@@ -11,7 +11,6 @@ var client = db("" + __dirname + "/../db/webapp1", {
 var exportFunction = function(format) {
   var output, firstname, i, j, lastname, max, password, username;
   output = [];
-  console.log("ex");
   client.users.getAll(function(outputBdd) {
 
     /*var expt, halfSize, i, j;
@@ -32,7 +31,8 @@ var exportFunction = function(format) {
     i = 0;
     j = outputBdd.length / 4;
     max = outputBdd.length - j;
-
+    console.log(outputBdd);
+    console.log("i:"+i+" j:"+j+" max:"+max);
     while (i < max) {
       username = outputBdd[i][0];
       lastname = outputBdd[i][1];
@@ -61,6 +61,7 @@ var exportFunction = function(format) {
         j++;
       }
       i = i + 3;
+      j = outputBdd.length / 4;
     }
     console.log("out");
     console.log(output);

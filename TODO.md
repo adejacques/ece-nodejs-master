@@ -98,17 +98,18 @@ Regarde dans index.jade si session existe et si oui affiche dahsboard et non sig
 * Export: écrire en continu dans le fichier (à chaque lecture d'un user: appeler writable ? à voir)
 
 ## List
-1. Import / Export (format, ligne de commandes)
-2. BDD: ajout des champs & modifie signup avec validation
-3. Gestion des sessions pour garder la connection
+1. Import / Export (format, ligne de commandes) OK
+2. BDD: ajout des champs & modifie signup avec validation OK
+3. Gestion des sessions pour garder la connection OK (à vérifier quand meme)
 4. Test : ajouter import / export & réparer + app (service rest, formulaire, regarder sur npm comment tester serveur web - 3 requetes?)
   * index avec email / username
   * requetes http (pas pilotage interface) : web service
   * web service: requete sign in (username, mail), sign up,
     * localhost:1337/ => gestion des post
     * Simulteur des requetes post: crawler : create new crowler: code 200 : sans erreur
-5. Completer le readme
+5. Completer le readme OK
 6. Structure vérifier: ajouter .npmignore
+7. log avec socket io
 
 
 # TODO POUR RENDU FINAL
