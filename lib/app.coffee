@@ -60,12 +60,16 @@ app.use stylus.middleware
     .use nib()
 app.use serve_static "#{__dirname}/../public"
 
-
 app.use (req,res,next) ->
   req.session.count ?= 0
   req.session.count++
   req.session.history ?= []
   req.session.history.push req.url
+  req.session.history.push Date.now()
+
+  if typeof req.session.username isnt "undefined"
+    client.logs.set req.session.username,
+      logs: req.session.history
 
   for socket , i in mySocket
     socket.emit 'logs',
@@ -73,7 +77,6 @@ app.use (req,res,next) ->
       count: req.session.count
       url: req.url
   next()
-
 
 # declare variables
 global.client = db "#{__dirname}/../db/webapp1", { valueEncoding: 'json' }
@@ -85,14 +88,14 @@ app.get '/', (req, res, next) ->
   importFunction()
   sess = req.session
   if sess.username
-    console.log(sess.username)
+    #console.log(sess.username)
     res.status(200)
   else
     res.render 'index', title: 'My app'
   return
 
 app.post '/login', (req, res, next) ->
-  console.log req.body
+  #console.log req.body
   sess = req.session
   isRightUser = false
   #TODO TEST Return True or false
@@ -100,9 +103,9 @@ app.post '/login', (req, res, next) ->
     #Login user
     client.emails.get req.body.username
     , (email) ->
-        console.log "mail"
-        console.log email
-        console.log req.body.username
+        #console.log "mail"
+        #console.log email
+        #console.log req.body.username
         if email.emailname is req.body.username
           client.users.getPassword email.username
           , (user) ->
@@ -115,6 +118,8 @@ app.post '/login', (req, res, next) ->
                 socket.emit 'login',
                   username: req.session.username or "anonymous"
                   crdate: Date.now()
+                  count: req.session.count
+                  url: req.session.history
 
               res.json
                  mode: 'login'
@@ -128,8 +133,8 @@ app.post '/login', (req, res, next) ->
          else
            client.users.getPassword req.body.username
            , (user) ->
-              console.log "user"
-              console.log user
+              #console.log "user"
+              #console.log user
               if user.username is req.body.username and user.password is req.body.password
                 sess.username = req.body.username
                 req.session.username = req.body.username
@@ -139,6 +144,8 @@ app.post '/login', (req, res, next) ->
                   socket.emit 'login',
                     username: req.session.username or "anonymous"
                     crdate: Date.now()
+                    count: req.session.count
+                    url: req.session.history
 
                 res.json
                   mode: 'login'
@@ -169,9 +176,30 @@ app.post '/login', (req, res, next) ->
     #Signup and login
     #res.json
       #mode: 'signupAndLog'
+            # client.users.get req.body.username
+            # , (user) ->
+              # if user.username is req.body.username
+              #   res.json
+              #      mode: 'signupAndLog'
+              #      success: false
+              # else
     do verification
-    console.log "error : " + error
+    #console.log "error : " + error
     if passwordOk is true
+      #console.log 'COOO'
+      client.users.set req.body.username,
+        password: req.body.password
+        firstname: req.body.firstname
+      #console.log 'set username'
+      , (err) ->
+       #console.log 'erreur set' if err
+      client.emails.set req.body.email,
+        username: req.body.username
+      , (err) ->
+        #console.log 'erreur set' if err
+       client.emails.get req.body.email
+       , (email) ->
+          #console.log email
       client.users.get req.body.username
       , (user) ->
         if user.username is req.body.username
@@ -184,17 +212,17 @@ app.post '/login', (req, res, next) ->
              firstname: req.body.firstname
              lastname: req.body.lastname
            , (err) ->
-             console.log 'erreur set' if err
+             #console.log 'erreur set' if err
            client.emails.set req.body.email,
              username: req.body.username
            , (err) ->
-             console.log 'erreur set' if err
+             #console.log 'erreur set' if err
            client.emails.get req.body.email
            , (email) ->
-              console.log email
+              #console.log email
            client.users.get req.body.username
            , (user) ->
-               console.log user
+               #console.log user
                if user.username is req.body.username and user.password is req.body.password
                  res.json
                    mode: 'signupAndLog'
@@ -206,9 +234,8 @@ app.post '/login', (req, res, next) ->
         mode: 'signupAndLog'
         success: error
 
-
 app.post '/export', (req, res, next) ->
-  console.log 'export bdd button function app'
+  #console.log 'export bdd button function app'
   #Signup and login
   exportFunction()
   res.json
@@ -216,10 +243,18 @@ app.post '/export', (req, res, next) ->
     success: true
 
 app.post '/logout', (req, res, next) ->
-  console.log("logout post")
+  #console.log("logout post")
   req.session.destroy()
   #res.send('You are logged out ! <meta http-equiv="refresh" content="5; URL=/">')
   res.redirect '/'
+
+app.post '/admin', (req, res, next) ->
+  client.logs.get req.session.username
+  , (logs) ->
+    if logs.username is req.session.username and typeof logs.password is "undefined"
+      console.log logs
+      res.json
+        logs: logs.logs
 
 # Function export import
 exportFunction = ->

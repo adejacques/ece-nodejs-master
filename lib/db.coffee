@@ -7,14 +7,22 @@ module.exports = (db="#{__dirname}../db") ->
   users:
     get: (username, callback) ->
       user = {}
+      global.user1 = {}
+      username1 = username
+      password = ""
+      #console.log "username : #{username}"
       db.createReadStream
         gt: "users:#{username}:"
       .on 'data', (data) ->
         [_, username, key] = data.key.split ':'
-        user.username ?= username
+        user.username = username
         user[key] = data.value
-        if user.username is username
-          callback user
+        password = user.password
+        #console.log password
+        if username1 is user.username and user.password is password#"azerty"
+          user1 = user
+          callback user1
+          #console.log user1
       .on 'error', (err) ->
         callback err if callback and typeof (callback) is "function"
       .on 'end', ->
@@ -28,7 +36,7 @@ module.exports = (db="#{__dirname}../db") ->
         user.username ?= username
         user[key] = data.value
         if user.username is username and key is "password"
-          console.log key
+          #console.log key
           callback user
       .on 'error', (err) ->
         callback err if callback and typeof (callback) is "function"
@@ -82,3 +90,28 @@ module.exports = (db="#{__dirname}../db") ->
         value: v
        db.batch ops, (err) ->
          callback err if callback and typeof (callback) is "function"
+  logs:
+    set: (username, logs_by_username, callback) ->
+      ops = for k, v of logs_by_username
+        continue if k is 'username'
+        console.log "key :" + k + "value : " + v
+        console.log "logs_by_username:#{username}:#{k}"
+        type: 'put'
+        key: "logs_by_username:#{username}:#{k}"
+        value: v
+       db.batch ops, (err) ->
+         callback err if callback and typeof (callback) is "function"
+    get: (username, callback) ->
+      logs_by_username = {}
+      db.createReadStream
+        gt: "logs_by_username:#{username}:"
+      .on 'data', (data) ->
+        [_, username, key] = data.key.split ':'
+        logs_by_username.username ?= username
+        logs_by_username[key] = data.value
+        if logs_by_username.username is username
+          callback logs_by_username
+      .on 'error', (err) ->
+        callback err if callback and typeof (callback) is "function"
+      .on 'end', ->
+        callback 'end!'
