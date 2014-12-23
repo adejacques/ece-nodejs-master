@@ -21,16 +21,11 @@ wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
 wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
   flags: "w"
 )
-
-#Flag 'w' remove all and write
-wstreamJSON = fs.createWriteStream(__dirname + "/../public/resources/export.json",
-  flags: "w"
-)
 ###
 
 module.exports = (arrayToSave, format) ->
   myformat = format if format
-
+  # If format is json, export to json file
   if myformat is "json"
     wstream = fs.createWriteStream(__dirname + "/../public/resources/export.json",
       flags: "w"
@@ -43,6 +38,7 @@ module.exports = (arrayToSave, format) ->
         console.log "Found "+ objectCounter+ " objects."
 
   else
+    # else format export to csv file (default format)
     wstream = fs.createWriteStream(__dirname + "/../public/resources/export.csv",
       flags: "w"
     )
@@ -69,7 +65,7 @@ module.exports = (arrayToSave, format) ->
       return
 
 
-  # Do pipe
+  # Do pipe, export user function
   exportUser: () ->
     if myformat is "json"
       myJSON = JSON.stringify({users: arrayToSave})

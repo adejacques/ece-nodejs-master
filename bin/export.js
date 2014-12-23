@@ -8,26 +8,14 @@ var client = db("" + __dirname + "/../db/webapp1", {
   valueEncoding: 'json'
 });
 
+/*
+Export function call export coffee
+*/
 var exportFunction = function(format) {
   var output, firstname, i, j, lastname, max, password, username;
   output = [];
   client.users.getAll(function(outputBdd) {
 
-    /*var expt, halfSize, i, j;
-    halfSize = outputBdd.length / 2;
-    i = 0;
-    console.log(outputBdd);
-    while (i < halfSize) {
-      j = halfSize;
-      while (j < outputBdd.length) {
-        if (outputBdd[i][0] === outputBdd[j][1]) {
-          output.push([outputBdd[i][0], outputBdd[j][0], outputBdd[i][1]]);
-          break;
-        }
-        j++;
-      }
-      i++;
-    }*/
     i = 0;
     j = outputBdd.length / 4;
     max = outputBdd.length - j;
@@ -70,10 +58,16 @@ var exportFunction = function(format) {
   });
 };
 
+/*
+If argv help show help
+*/
 if (argv.help) {
   console.log("\n\nExport function\nCommand : export [--help] [--format {name}]\n--help : show help\n--format : csv (default) or json\n\n");
 }
 
+/*
+If argv format call import function
+*/
 if (argv.format) {
   var format = "csv";
   if (argv.format === 'json') {

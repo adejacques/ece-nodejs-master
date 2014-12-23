@@ -32,13 +32,14 @@ module.exports = (client, format) ->
       registerUser record
     return
 
+  # Function get stream if it is json format
   getStream = ->
     jsonData = __dirname + "/../public/resources/export.json"
     stream = fs.createReadStream(jsonData,encoding: "utf8")
     parserJson = JSONStream.parse("*")
     stream.pipe parserJson
 
-  # Function to save user in db
+  # Function to save users in db
   registerUser = (myuser) ->
     ###
       myuser[0] username
@@ -70,7 +71,7 @@ module.exports = (client, format) ->
             console.log user
     return
 
-  # Do pipe
+  # Do pipe, import function
   importUser: () ->
     console.log 'import user call'
     if format is "json"

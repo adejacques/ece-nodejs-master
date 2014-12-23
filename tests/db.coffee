@@ -4,14 +4,17 @@ db = require '../lib/db'
 
 client = db "#{__dirname}/../db/webappTest", { valueEncoding: 'json' }
 
+# Test database
 describe 'users', ->
 
+  # Before run all remove database is already added
   before (next) ->
     rimraf "#{__dirname}/../db/webappTest", next
 
   after (next) ->
     rimraf "#{__dirname}/../db/webappTest", next
 
+  # Test insert user and get
   it 'insert and get all', (next) ->
     client.users.set "myusername",
       password: "mypassword"
@@ -31,6 +34,7 @@ describe 'users', ->
           user.should.eql "end!"
     next()
 
+  # Test inser multiple user and get only one
   it 'get only a single user', (next) ->
     client.users.set "toto",
       password: "ptoto"
@@ -53,6 +57,7 @@ describe 'users', ->
             should.not.exists user.email
     next()
 
+  # Test set user email and get only one email
   it 'get only a single user by mail', (next) ->
     client.emails.set "userA@gm.com",
       username: "userA"

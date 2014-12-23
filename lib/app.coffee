@@ -1,4 +1,3 @@
-
 http = require 'http'
 stylus = require 'stylus'
 nib = require 'nib'
@@ -26,6 +25,9 @@ mySocket = []
 
 app = express()
 
+###
+  INITIALISE SOCKET
+###
 server = http.Server(app)
 io = require('socket.io')(server)
 
@@ -60,6 +62,9 @@ app.use stylus.middleware
     .use nib()
 app.use serve_static "#{__dirname}/../public"
 
+###
+  USE SOCKET LOGS
+###
 app.use (req,res,next) ->
   req.session.count ?= 0
   req.session.count++
@@ -78,14 +83,21 @@ app.use (req,res,next) ->
       url: req.url
   next()
 
-# declare variables
+###
+  VARIABLES
+###
 global.client = db "#{__dirname}/../db/webapp1", { valueEncoding: 'json' }
 isAlreadyImport = false
 
-# routing
+###
+  ROUTING
+###
+
+## Route get "/"
 app.get '/', (req, res, next) ->
   # Import user csv to populate bdd if it is not already done (in case of reload page)
   importFunction()
+
   sess = req.session
   if sess.username
     #console.log(sess.username)
@@ -93,6 +105,7 @@ app.get '/', (req, res, next) ->
     #console.log req
     #console.log res
     #res.render 'index', {title: 'My app', isConnect: true}#
+
     # Add socket io message login
     for socket, i in mySocket
       socket.emit 'reload',
@@ -104,18 +117,16 @@ app.get '/', (req, res, next) ->
 
   return
 
+## Route post "/login"
 app.post '/login', (req, res, next) ->
-  #console.log req.body
   sess = req.session
   isRightUser = false
-  #TODO TEST Return True or false
+
+  # If user click on login
   if req.body.button is 'Login'
-    #Login user
     client.emails.get req.body.username
     , (email) ->
-        #console.log "mail"
-        #console.log email
-        #console.log req.body.username
+        # Check with email
         if email.emailname is req.body.username
           client.users.getPassword email.username
           , (user) ->
@@ -141,10 +152,9 @@ app.post '/login', (req, res, next) ->
                mode: 'login'
                success:false
          else
+           # Check with username
            client.users.getPassword req.body.username
            , (user) ->
-              #console.log "user"
-              #console.log user
               if user.username is req.body.username and user.password is req.body.password
                 sess.username = req.body.username
                 req.session.username = req.body.username
@@ -161,20 +171,23 @@ app.post '/login', (req, res, next) ->
                   mode: 'login'
                   success: true
                   username: req.body.username
-                    #password: req.body.password
+
               else
                 res.json
                   mode: 'login'
                   success:false
 
   else if req.body.button is 'Signup'
-    #Change to signup form
+    # Else if user click on sign up button, display signup form
     res.json
       mode: 'signup'
+
   else if req.body.button is 'SignupAndLog'
+    # Else if user has fill fields sign up and click to save and log
     passwordOk = false;
     error = '';
 
+    # Function to check is password is fill and if it is the same in both case
     verification = ->
       if req.body.username is "" or req.body.email is "" or req.body.password is "" or req.body.repassword is ""
         passwordOk = false
@@ -183,33 +196,21 @@ app.post '/login', (req, res, next) ->
         passwordOk = true
       else
         error = 'passwordNotOk'
-    #Signup and login
-    #res.json
-      #mode: 'signupAndLog'
-            # client.users.get req.body.username
-            # , (user) ->
-              # if user.username is req.body.username
-              #   res.json
-              #      mode: 'signupAndLog'
-              #      success: false
-              # else
-    do verification
-    #console.log "error : " + error
+
+    #Do verification
     if passwordOk is true
-      #console.log 'COOO'
       client.users.set req.body.username,
         password: req.body.password
         firstname: req.body.firstname
-      #console.log 'set username'
       , (err) ->
-       #console.log 'erreur set' if err
+       console.log "error set user" if err
       client.emails.set req.body.email,
         username: req.body.username
       , (err) ->
-        #console.log 'erreur set' if err
+       console.log "error set mail" if err
        client.emails.get req.body.email
        , (email) ->
-          #console.log email
+          console.log "error get mail" if err
       client.users.get req.body.username
       , (user) ->
         if user.username is req.body.username
@@ -222,14 +223,14 @@ app.post '/login', (req, res, next) ->
              firstname: req.body.firstname
              lastname: req.body.lastname
            , (err) ->
-             #console.log 'erreur set' if err
+             console.log 'erreur set' if err
            client.emails.set req.body.email,
              username: req.body.username
            , (err) ->
-             #console.log 'erreur set' if err
+             console.log 'erreur set' if err
            client.emails.get req.body.email
            , (email) ->
-              #console.log email
+              console.log email
            client.users.get req.body.username
            , (user) ->
                #console.log user
@@ -244,20 +245,19 @@ app.post '/login', (req, res, next) ->
         mode: 'signupAndLog'
         success: error
 
+## Routes post '/export' to export user in database
 app.post '/export', (req, res, next) ->
-  #console.log 'export bdd button function app'
-  #Signup and login
   exportFunction()
   res.json
     mode: 'export'
     success: true
 
+## Routes post '/logout' to logout
 app.post '/logout', (req, res, next) ->
-  #console.log("logout post")
   req.session.destroy()
-  #res.send('You are logged out ! <meta http-equiv="refresh" content="5; URL=/">')
   res.redirect '/'
 
+## Routes post '/admin' to show logs of user and store
 app.post '/admin', (req, res, next) ->
   client.logs.get req.session.username
   , (logs) ->
@@ -267,7 +267,17 @@ app.post '/admin', (req, res, next) ->
         username: req.session.username
         logs: logs.logs
 
-# Function export import
+## Routes post "/user/login"
+app.post '/user/login', (req, res, next) ->
+  res.json
+    username: 'wdavidw'
+    lastname: 'Wormss'
+    Firstname: 'David'
+    email: 'david@adaltas.com'
+
+###
+ Function export user store in database into csv
+###
 exportFunction = ->
   output = []
 
@@ -308,20 +318,15 @@ exportFunction = ->
 
   return
 
+###
+ Function import user store in csv into database if it is not already done
+###
 importFunction = ->
   unless isAlreadyImport
     imt = myimport client
     imt.importUser()
     isAlreadyImport = true
   return
-
-
-app.post '/user/login', (req, res, next) ->
-  res.json
-    username: 'wdavidw'
-    lastname: 'Wormss'
-    Firstname: 'David'
-    email: 'david@adaltas.com'
 
 app.use serve_index "#{__dirname}/../public"
 if process.env.NODE_ENV is 'development'
