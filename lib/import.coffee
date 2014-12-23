@@ -34,7 +34,7 @@ module.exports = (client, format) ->
 
   # Function get stream if it is json format
   getStream = ->
-    jsonData = __dirname + "/../public/resources/export.json"
+    jsonData = __dirname + "/../public/resources/users.json"
     stream = fs.createReadStream(jsonData,encoding: "utf8")
     parserJson = JSONStream.parse("*")
     stream.pipe parserJson

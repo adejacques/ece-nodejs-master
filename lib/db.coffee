@@ -48,11 +48,12 @@ module.exports = (db="#{__dirname}../db") ->
       db.createReadStream
        gt: ""
       .on 'data', (data) ->
-        [_,data_key,_] = data.key.split ':'
-        pers.key = data_key
-        pers.value = data.value
-        test = [data_key, data.value]
-        output.push test
+        [type,data_key,key] = data.key.split ':'
+        if key != "logs"
+          pers.key = data_key
+          pers.value = data.value
+          test = [data_key, data.value]
+          output.push test
       .on 'end', ->
         callback output
       .on 'error', (err) ->

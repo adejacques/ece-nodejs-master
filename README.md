@@ -87,6 +87,10 @@ Run test
 ```bash
 npm test
 ```
+Or
+```bash
+./node_modules/.bin/mocha --compilers coffee:coffee-script/register tests
+```
 
 ## Contributors (groupe 07)
 * Alexandre Dejacques : <dejacques@ece.fr> - <https://github.com/adejacques>

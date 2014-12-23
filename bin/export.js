@@ -74,6 +74,5 @@ if (argv.format) {
     // Export to json
     format = "json";
   }
-  console.log(format);
   exportFunction(format);
 }
