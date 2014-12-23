@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+      meta(charset='utf-8')
+      title HDFS Web UI
+      link(rel='icon', type='image/vnd.microsoft.icon', href='favicon.ico')
+      link(rel='shortcut icon', type='image/x-icon', href='favicon.ico')
+      link(rel='stylesheet', href='vendors/bootstrap/css/bootstrap.min.css')
+      link(rel='stylesheet', href='resources/webapp.css')
+      link(rel='stylesheet', href='ressources/webapp.styl')
+      meta(name="viewport", content="width=device-width, initial-scale=1")
+      script(type='text/javascript', src='vendors/jquery-1.11.1.min.js')
+      script(type='text/javascript', src='vendors/bootstrap/js/bootstrap.min.js')
+      script(src="/socket.io/socket.io.js")
+      script
+          :coffee
+            $().ready ->        
+              console.log 'ready admin'
+              socket = io('http://localhost');
+              
+              socket.on "login", (data) ->
+                console.log data
+                $('#data').append """
+                <tr  id="#{data.username}">
+                  <td>#{data.username}</td>
+                  <td>
+                    <div class="info">#{data.crdate}</div>
+                    <div class="count">0</div>
+                    <div class="logs"></div>
+                  </td>
+                </tr>
+                """ 
+              socket.on "logs", (data) ->
+                console.log "on log"
+                return if not data.username or data.username is "anomymous"
+                console.log "is define"
+                $('#' + data.username + ' .count').html data.count
+                $('#' + data.username + ' .logs').append "<div>#{data.url}</div>"
+
+  body
+
+    div#headerDiv
+        h1#headerTitle Admin
+
+    div.jumbotron#messageOutput
+        h1#msgTitle Log history
+        p#msgText User log history visualisation
+
+    table#data(style="width 80%;margin: 0 auto")
+      tr.form-group
+        th
+          span Username
+        th
+          span Informations
+
+    footer
+        p © 2014 - All rights reserved.
+        p Alexandre Dejacques - Lauren Letestu - Thomas Pansart

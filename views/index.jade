@@ -18,26 +18,39 @@ html
           $('#successLogin').hide()
           $('.signupForm').hide()
           $('#messageOutput').hide()
+          
           console.log 'ready'
-
+            
           socket = io('http://localhost');
-          # socket.on "login", (data) ->
-          #   console.log data
-          #   $('#data').append """
-          #     <tr id="#{data.username}">
-          #       <td><p> #{data.username} </p></td>
-          #       <td>
-          #         <div class="info"><p>#{data.crdate}</p></div>
-          #         <div class="count"><p>#{data.count}</p></div>
-          #         <div class="logs">#{data.url}</div>
-          #       </td>
-          #     </tr>
-          #   """
+          
+          socket.on "reload", (data) ->
+            console.log data
+            $('#signin').hide()
+            $('#messageOutput').show()
+            $('#successLogin').show()
+            $('.signupForm').hide()
+
+          socket.on "login", (data) ->
+            console.log data
+            $('#data').append """
+              <tr id="#{data.username}">
+                <td><p> #{data.username} </p></td>
+                <td>
+                  <div class="count"><p>COUNT: #{data.count}</p></div>
+                  
+                  <div><p>INFOS</p></div>
+                  <div class="info">#{data.crdate}</div>
+                  
+                  <div><p>LOGS</p></div>
+                  <div class="logs">#{data.url}</div>
+                </td>
+              </tr>
+              """
           socket.on "logs", (data) ->
             console.log "on log"
             return if not data.username or data.username is "anomymous"
             console.log "is define"
-            $('#' + data.username + ' .count').html data.count
+            $('#' + data.username + ' .count').html "<p>COUNT: #{data.count}</p>"
             $('#' + data.username + ' .logs').append "<div>#{data.url}</div>"
 
           $('#login').submit (e) ->
@@ -127,9 +140,17 @@ html
           $('#admin').submit (e) ->
             e.preventDefault()
             console.log "admin"
+            
             $.post "/admin", (data) ->
-              $('#data_admin').text data.logs
-              #console.log data.logs
+              console.log "mydata"
+              console.log "data:"+data.logs
+              logsArr = data.logs.split ","
+              i = 0
+              while i <logsArr.length/2
+                console.log data.username + logsArr[i] + logsArr[i+1]
+                $('#' + data.username + ' .logs').append "<div>#{logsArr[i]}</div>"
+                $('#' + data.username + ' .info').append "<div>#{logsArr[i+1]}</div>"
+                i=i+2
 
   body
 
@@ -189,20 +210,29 @@ html
       h2 Hello
       p#loginText
 
-      div#admin.row
+      div#admin
         h2 Admin
         p#exportMessage
         p Click to print your logs
         form#admin(action="/admin", method="post", role="form")
           input.btn.btn-primary.col-md-1#exportBtn(type='submit', value="Logs")
         br
-        p#data_admin
+        br
+        table#data
+          tr.form-group
+            th
+              span Username
+            th
+              span Informations
+        
+      
       div#exportDiv.row
         h2 Export database
         p#exportMessage
         p Click to export database
         form#export(action="/export", method="post", role="form")
           input.btn.btn-primary.col-md-1#exportBtn(type='submit', value="Export")
+      
       div#logout.row
         h2 Logout
         p Click to logout

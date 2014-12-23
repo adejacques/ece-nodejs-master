@@ -89,9 +89,19 @@ app.get '/', (req, res, next) ->
   sess = req.session
   if sess.username
     #console.log(sess.username)
-    res.status(200)
+    #res.status(200)
+    #console.log req
+    #console.log res
+    #res.render 'index', {title: 'My app', isConnect: true}#
+    # Add socket io message login
+    for socket, i in mySocket
+      socket.emit 'reload',
+        username: req.session.username or "anonymous"
+
+    #res.render 'index', {title: 'My app', isConnect: false}
   else
-    res.render 'index', title: 'My app'
+    res.render 'index', {title: 'My app', isConnect: false}
+
   return
 
 app.post '/login', (req, res, next) ->
@@ -252,8 +262,9 @@ app.post '/admin', (req, res, next) ->
   client.logs.get req.session.username
   , (logs) ->
     if logs.username is req.session.username and typeof logs.password is "undefined"
-      console.log logs
+      #console.log logs
       res.json
+        username: req.session.username
         logs: logs.logs
 
 # Function export import
