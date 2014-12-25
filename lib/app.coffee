@@ -95,31 +95,25 @@ isAlreadyImport = false
 
 ## Route get "/"
 app.get '/', (req, res, next) ->
-  # Import user csv to populate bdd if it is not already done (in case of reload page)
-  importFunction()
-
-  sess = req.session
-  if sess.username
-    #console.log(sess.username)
-    #res.status(200)
-    #console.log req
-    #console.log res
-    #res.render 'index', {title: 'My app', isConnect: true}#
-
+  if req.session.username
     # Add socket io message login
     for socket, i in mySocket
-      socket.emit 'reload',
+      socket.emit 'login',
         username: req.session.username or "anonymous"
+        crdate: Date.now()
+        count: req.session.count
+        url: req.session.history
 
-    #res.render 'index', {title: 'My app', isConnect: false}
+    res.render 'index', {title: 'My app', isConnect: true, username: req.session.username, firstname: req.session.firstname}
   else
+    # Import user csv to populate bdd if it is not already done (in case of reload page)
+    #importFunction()
     res.render 'index', {title: 'My app', isConnect: false}
 
   return
 
 ## Route post "/login"
 app.post '/login', (req, res, next) ->
-  sess = req.session
   isRightUser = false
 
   # If user click on login
@@ -131,8 +125,8 @@ app.post '/login', (req, res, next) ->
           client.users.getPassword email.username
           , (user) ->
             if user.password is req.body.password
-              #  isRightUser = true
-              sess.username = req.body.username
+              req.session.username = user.firstname
+              req.session.firstname = user.firstname
 
               # Add socket io message login
               for socket, i in mySocket
@@ -145,8 +139,8 @@ app.post '/login', (req, res, next) ->
               res.json
                  mode: 'login'
                  success: true
-                 username: req.body.username
-                 password: req.body.password
+                 username: req.session.username
+                 firstname: req.session.firstname
             else
              res.json
                mode: 'login'
@@ -156,8 +150,8 @@ app.post '/login', (req, res, next) ->
            client.users.getPassword req.body.username
            , (user) ->
               if user.username is req.body.username and user.password is req.body.password
-                sess.username = req.body.username
                 req.session.username = req.body.username
+                req.session.firstname = user.firstname
 
                 # Add socket io message login
                 for socket, i in mySocket
@@ -170,7 +164,8 @@ app.post '/login', (req, res, next) ->
                 res.json
                   mode: 'login'
                   success: true
-                  username: req.body.username
+                  username: req.session.username
+                  firstname: req.session.firstname
 
               else
                 res.json
@@ -185,23 +180,46 @@ app.post '/login', (req, res, next) ->
   else if req.body.button is 'SignupAndLog'
     # Else if user has fill fields sign up and click to save and log
     passwordOk = false;
-    error = '';
+    error = 'notSend';
+    isSend = false;
 
     # Function to check is password is fill and if it is the same in both case
     verification = ->
+      isRegister = false
+
+      client.users.getPassword req.body.username, (user) ->
+        console.log user
+        # Check with user
+        if typeof(user) is "object"
+          console.log 'is obj'
+          isRegister = true
+          isEnd = true
+
+
       if req.body.username is "" or req.body.email is "" or req.body.password is "" or req.body.repassword is ""
         passwordOk = false
         error = 'fieldsEmpty'
+        console.log 'fieldempty'
       else if req.body.password is req.body.repassword
-        passwordOk = true
+        if isRegister is true
+          console.log "false"
+          passwordOk = false
+          error = false
+        else
+          passwordOk = true
+
       else
         error = 'passwordNotOk'
 
-    #Do verification
+    do verification
+
+    console.log "pass "+passwordOk
     if passwordOk is true
+
       client.users.set req.body.username,
         password: req.body.password
         firstname: req.body.firstname
+        lastname: req.body.lastname
       , (err) ->
        console.log "error set user" if err
       client.emails.set req.body.email,
@@ -213,34 +231,32 @@ app.post '/login', (req, res, next) ->
           console.log "error get mail" if err
       client.users.get req.body.username
       , (user) ->
-        if user.username is req.body.username
-          res.json
-             mode: 'signupAndLog'
-             success: false
-        else
-           client.users.set req.body.username,
-             password: req.body.password
-             firstname: req.body.firstname
-             lastname: req.body.lastname
-           , (err) ->
-             console.log 'erreur set' if err
-           client.emails.set req.body.email,
-             username: req.body.username
-           , (err) ->
-             console.log 'erreur set' if err
-           client.emails.get req.body.email
-           , (email) ->
-              console.log email
-           client.users.get req.body.username
-           , (user) ->
-               #console.log user
-               if user.username is req.body.username and user.password is req.body.password
-                 res.json
-                   mode: 'signupAndLog'
-                   success: true
-                   username: req.body.username
-                   password: req.body.password
-    else if passwordOk is false
+        if typeof(user) is "object" and Object.keys(user).length is 4
+          if user.username is req.body.username and user.password is req.body.password
+            isSend = true
+            req.session.username = req.body.username
+            req.session.firstname = req.body.firstname
+
+            # Add socket io message login
+            for socket, i in mySocket
+              socket.emit 'login',
+                username: req.session.username or "anonymous"
+                crdate: Date.now()
+                count: req.session.count
+                url: req.session.history
+
+            res.json
+              mode: 'signupAndLog'
+              success: true
+              username: req.session.username
+              firstname: req.session.firstname
+          else
+            isSend = true
+            res.json
+               mode: 'signupAndLog'
+               success: false
+
+    else if passwordOk is false or isSend is false
       res.json
         mode: 'signupAndLog'
         success: error
@@ -282,22 +298,20 @@ exportFunction = ->
   output = []
 
   client.users.getAll (outputBdd) ->
-    #halfSize = outputBdd.length / 2
     i = 0
-    j = outputBdd.length/4
+    j = parseInt(outputBdd.length/4)
     max = outputBdd.length - j
-    #console.log 'max:'+max+' j:'+j
-    console.log outputBdd
+    console.log "j:"+j+" max:"+max
     while i < max
       #console.log outputBdd[i]
       username = outputBdd[i][0]
       lastname = outputBdd[i][1]
       firstname = outputBdd[i+1][1]
       password = outputBdd[i+2][1]
-      console.log "user:" + username + " pass:"+password+" firstn:"+firstname+" lastn:"+lastname
+      #console.log "user:" + username + " pass:"+password+" firstn:"+firstname+" lastn:"+lastname
 
       while j < outputBdd.length
-        console.log j + ":"+ outputBdd[j]
+        #console.log j + ":"+ outputBdd[j]
         #if typeof(outputBdd[j]) is not "undefined"
         if username is outputBdd[j][1]
           output.push [

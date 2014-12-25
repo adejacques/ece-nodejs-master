@@ -15,9 +15,9 @@ html
     script
       :coffee
         $().ready ->
-          $('#successLogin').hide()
-          $('.signupForm').hide()
-          $('#messageOutput').hide()
+          #$('#successLogin').hide()
+          #$('.signupForm').hide()
+          #$('#messageOutput').hide()
           
           console.log 'ready'
             
@@ -49,10 +49,23 @@ html
           socket.on "logs", (data) ->
             console.log "on log"
             return if not data.username or data.username is "anomymous"
-            console.log "is define"
             $('#' + data.username + ' .count').html "<p>COUNT: #{data.count}</p>"
             $('#' + data.username + ' .logs').append "<div>#{data.url}</div>"
 
+          $.get "/", (data) ->
+          if '#{isConnect}' is 'true'
+            $('#loginText').text "Hi " + '#{firstname}' + ", you username is " + '#{username}' + " !"
+            $('#headerTitle').text 'Dahsboard'
+            $('#msgTitle').text "Your dashboard"
+            $('#msgText').text "Welcome on your dahsboard !"
+            $('#signin').hide()
+            $('#messageOutput').show()
+            $('#successLogin').show()
+          else if '#{isConnect}' is 'false'
+            $('#successLogin').hide()
+            $('.signupForm').hide()
+            $('#messageOutput').hide()
+            
           $('#login').submit (e) ->
             $this = $(this)
             user =
@@ -71,11 +84,10 @@ html
               if data.mode is 'login'
                 if data.success is true
                   # User login password and username is ok
-                  # $('#loginText').text "Username: " + data.username + " - Password: " + data.password
-                  $('#loginText').text "You are well logged : " + data.username + " !"
-                  $('#headerTitle').text data.firstname
-                  $('#msgTitle').text "Login"
-                  $('#msgText').text "You are well logged"
+                  $('#loginText').text "Hi "+ data.firstname + ", you username is " + data.username + " !"
+                  $('#headerTitle').text 'Dahsboard'
+                  $('#msgTitle').text "Your dashboard"
+                  $('#msgText').text "Welcome on your dahsboard !"
                   $('#signin').hide()
                   $('#messageOutput').show()
                   $('#successLogin').show()
@@ -90,16 +102,16 @@ html
                 $('.signupForm').show()
                 $('.signinForm').hide()
                 $('#headerTitle').text "Sign up and log"
+              
               else if data.mode is 'signupAndLog'
                 console.log data.success
                 # Save and log
                 if data.success is true
                   # User login password and username is ok
-                  # $('#loginText').text "Username: " + data.username + " - Password: " + data.password
-                  $('#headerTitle').text data.firstname
-                  $('#loginText').text "You are well logged : " + data.username + " !"
-                  $('#msgTitle').text "Login"
-                  $('#msgText').text "You are well registered and logged."
+                  $('#loginText').text "Hi "+ data.firstname + ", you username is " + data.username + " !"
+                  $('#headerTitle').text 'Dahsboard'
+                  $('#msgTitle').text "Your dashboard"
+                  $('#msgText').text "Welcome on your dahsboard !"
                   $('#signin').hide()
                   $('#messageOutput').show()
                   $('#successLogin').show()
@@ -111,7 +123,7 @@ html
                   $('#msgTitle').text "Error"
                   $('#msgText').text "Your passwords are not the same."
                   $('#messageOutput').show()
-                else if data.success is 'fieldsEmpty'
+                else if data.success is 'fieldsEmpty' or data.success is 'notSend'
                   $('#msgTitle').text "Error"
                   $('#msgText').text "All fields are not filled."
                   $('#messageOutput').show()
@@ -123,10 +135,11 @@ html
             $.post "/export", (data) ->
               console.log "export: " + data
               if data.success is true
-                $('#exportMessage').text "Data register"
-                $('#exportDiv').hide()
+                $('#exportMessage').text "Database is well exported in export.csv file."
+                $('#export').hide()
+                $('.exportHide').hide()
               else
-                $('#exportMessage').text "No Data register"
+                $('#exportMessage').text "No data can be exported."
             , 'json'
 
           $('#logout').submit (e) ->
@@ -142,8 +155,6 @@ html
             console.log "admin"
             
             $.post "/admin", (data) ->
-              console.log "mydata"
-              console.log "data:"+data.logs
               logsArr = data.logs.split ","
               i = 0
               while i <logsArr.length/2
@@ -212,8 +223,7 @@ html
 
       div#admin
         h2 Admin
-        p#exportMessage
-        p Click to print your logs
+        p Click to print your logs.
         form#admin(action="/admin", method="post", role="form")
           input.btn.btn-primary.col-md-1#exportBtn(type='submit', value="Logs")
         br
@@ -229,7 +239,7 @@ html
       div#exportDiv.row
         h2 Export database
         p#exportMessage
-        p Click to export database
+        p.exportHide Click to export the database in csv file.
         form#export(action="/export", method="post", role="form")
           input.btn.btn-primary.col-md-1#exportBtn(type='submit', value="Export")
       

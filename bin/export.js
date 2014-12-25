@@ -17,18 +17,23 @@ var exportFunction = function(format) {
   client.users.getAll(function(outputBdd) {
 
     i = 0;
-    j = outputBdd.length / 4;
+    j = parseInt(outputBdd.length / 4);
     max = outputBdd.length - j;
-    console.log(outputBdd);
-    console.log("i:"+i+" j:"+j+" max:"+max);
+    //console.log(outputBdd);
+    console.log(outputBdd.length + " i:"+i+" j:"+j+" max:"+max);
+    m=0
+    while (m<outputBdd.length){
+      console.log(outputBdd[m]);
+      m++;
+    }
     while (i < max) {
       username = outputBdd[i][0];
       lastname = outputBdd[i][1];
       firstname = outputBdd[i + 1][1];
       password = outputBdd[i + 2][1];
-      console.log("user:" + username + " pass:" + password + " firstn:" + firstname + " lastn:" + lastname);
+      //console.log("user:" + username + " pass:" + password + " firstn:" + firstname + " lastn:" + lastname);
       while (j < outputBdd.length) {
-        console.log(j + ":" + outputBdd[j]);
+        //console.log(j + ":" + outputBdd[j]);
         if (username === outputBdd[j][1]) {
           if (format == "json") {
             var item = {
@@ -51,8 +56,7 @@ var exportFunction = function(format) {
       i = i + 3;
       j = outputBdd.length / 4;
     }
-    console.log("out");
-    console.log(output);
+    //console.log(output);
     expt = myexport(output, format);
     return expt.exportUser();
   });

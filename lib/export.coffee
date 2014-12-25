@@ -50,7 +50,6 @@ module.exports = (arrayToSave, format) ->
 
     # Adding data during readable
     stringifier.on "readable", ->
-      console.log "read"
       data += row  while row = stringifier.read()
       return
 
@@ -60,7 +59,7 @@ module.exports = (arrayToSave, format) ->
 
     # Write on csv file at the end
     stringifier.on "finish", ->
-      console.log "end:" + data
+      #console.log "end:" + data
       wstream.write data
       return
 
