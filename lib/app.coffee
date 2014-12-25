@@ -107,7 +107,7 @@ app.get '/', (req, res, next) ->
     res.render 'index', {title: 'My app', isConnect: true, username: req.session.username, firstname: req.session.firstname}
   else
     # Import user csv to populate bdd if it is not already done (in case of reload page)
-    #importFunction()
+    importFunction()
     res.render 'index', {title: 'My app', isConnect: false}
 
   return
