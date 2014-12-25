@@ -187,26 +187,26 @@ app.post '/login', (req, res, next) ->
     verification = ->
       isRegister = false
 
-      client.users.getPassword req.body.username, (user) ->
-        console.log user
-        # Check with user
-        if typeof(user) is "object"
-          console.log 'is obj'
-          isRegister = true
-          isEnd = true
-
+      #client.users.getPassword req.body.username, (user) ->
+      #  console.log user
+      #  # Check with user
+      #  if typeof(user) is "object"
+      #    console.log 'is obj'
+      #    isRegister = true
+      #    isEnd = true
 
       if req.body.username is "" or req.body.email is "" or req.body.password is "" or req.body.repassword is ""
         passwordOk = false
         error = 'fieldsEmpty'
         console.log 'fieldempty'
       else if req.body.password is req.body.repassword
-        if isRegister is true
-          console.log "false"
-          passwordOk = false
-          error = false
-        else
-          passwordOk = true
+        passwordOk = true
+        #if isRegister is true
+        #  console.log "false"
+        #  passwordOk = false
+        #  error = false
+        #else
+        #  passwordOk = true
 
       else
         error = 'passwordNotOk'
