@@ -3,6 +3,7 @@ require('coffee-script/register')
 var myexport = require('../lib/export');
 var db = require('../lib/db');
 var argv = require('minimist')(process.argv.slice(2));
+var format = "csv";
 
 var client = db("" + __dirname + "/../db/webapp1", {
   valueEncoding: 'json'
@@ -20,20 +21,12 @@ var exportFunction = function(format) {
     j = parseInt(outputBdd.length / 4);
     max = outputBdd.length - j;
     //console.log(outputBdd);
-    console.log(outputBdd.length + " i:"+i+" j:"+j+" max:"+max);
-    m=0
-    while (m<outputBdd.length){
-      console.log(outputBdd[m]);
-      m++;
-    }
     while (i < max) {
       username = outputBdd[i][0];
       lastname = outputBdd[i][1];
       firstname = outputBdd[i + 1][1];
       password = outputBdd[i + 2][1];
-      //console.log("user:" + username + " pass:" + password + " firstn:" + firstname + " lastn:" + lastname);
       while (j < outputBdd.length) {
-        //console.log(j + ":" + outputBdd[j]);
         if (username === outputBdd[j][1]) {
           if (format == "json") {
             var item = {
@@ -54,7 +47,7 @@ var exportFunction = function(format) {
         j++;
       }
       i = i + 3;
-      j = outputBdd.length / 4;
+      j = parseInt(outputBdd.length / 4);
     }
     //console.log(output);
     expt = myexport(output, format);
@@ -73,10 +66,11 @@ if (argv.help) {
 If argv format call import function
 */
 if (argv.format) {
-  var format = "csv";
   if (argv.format === 'json') {
     // Export to json
     format = "json";
   }
-  exportFunction(format);
+
 }
+exportFunction(format);
+console.log("Exported BDD format: " + format);

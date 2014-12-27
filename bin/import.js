@@ -3,6 +3,7 @@ require('coffee-script/register')
 var myimport = require('../lib/import');
 var db = require('../lib/db');
 var argv = require('minimist')(process.argv.slice(2));
+var format = "csv";
 
 var client = db("" + __dirname + "/../db/webapp1", {
   valueEncoding: 'json'
@@ -27,11 +28,9 @@ if (argv.help) {
 If argv format call import function
 */
 if (argv.format) {
-  console.log(argv.format);
-  var format = "csv";
   if (argv.format === 'json') {
     // Export to json
     format = "json";
   }
-  importFunction(format);
 }
+importFunction(format);

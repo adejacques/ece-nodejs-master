@@ -69,13 +69,13 @@ Go to browser
 http://localhost:1337/
 
 ### Run import
-With bash, go to home project directory.
+With bash, go to home project directory (import file public/ressources/users).
 ```bash
 node bin/import [--help] [--format {name}]
 ```
 
 ### Run export
-With bash, go to home project directory.
+With bash, go to home project directory (export in file public/ressources/export).
 ```bash
 node bin/export [--help] [--format {name}]
 ```
